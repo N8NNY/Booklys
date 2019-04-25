@@ -18,7 +18,7 @@
               id="email"
               type="email"
               v-model="email"
-              :rules="[checkEmailFormat]"
+              
               required></v-text-field>
           </v-flex>
           <v-flex>
@@ -68,7 +68,7 @@
       },
       loading () {
         return this.$store.getters.getLoading
-      },
+      }
       /*checkEmailFormat(){
         var email=this.email
         //var dname=document.getElementById('dname').value;
@@ -117,7 +117,7 @@
         else {
             return false
         }
-    }*/
+      }*/
     },
     methods: {
       userSignUp () {
