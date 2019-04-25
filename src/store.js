@@ -52,7 +52,25 @@ export default new Vuex.Store({
       commit('setUser', null)
       alert('ออกจากระบบสำเร็จ')
       router.push('/login')
-    }
+    },
+    changeToSignUpPage(){
+      router.push('/signup')
+    },
+    
+      userSignUp ({commit}, payload) {
+        commit('setLoading', true)
+        firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password)
+          .then(firebaseUser => {
+            commit('setUser', firebaseUser)
+            commit('setLoading', false)
+            router.push('/')
+          })
+          .catch(error => {
+            commit('setError', error.message)
+            commit('setLoading', false)
+          })
+      }
+    
    //
   }
 })
