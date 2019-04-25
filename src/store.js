@@ -33,12 +33,14 @@ export default new Vuex.Store({
           commit('setUser', firebaseUser)
           commit('setLoading', false)
           commit('setError', null)
-          router.push('/home')
+          router.push('/');
+          
         })
         .catch(error => {
           commit('setError', error.message)
           commit('setLoading', false)
         })
+        
     }
    //
   }
