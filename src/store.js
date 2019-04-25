@@ -8,7 +8,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    appName: 'NBK48',
+    
     user: null,
     error: null,
     loading: false
@@ -33,14 +33,25 @@ export default new Vuex.Store({
           commit('setUser', firebaseUser)
           commit('setLoading', false)
           commit('setError', null)
+          alert('เข้าสู่ระบบสำเร็จ')
           router.push('/');
           
         })
         .catch(error => {
           commit('setError', error.message)
           commit('setLoading', false)
+          alert('อีเมลหรือรหัสผ่านไม่ถูกต้อง')
         })
         
+    },
+    autoSignIn ({commit}, payload) {
+      commit('setUser', payload)
+     },
+     userSignOut ({commit}) {
+      firebase.auth().signOut()
+      commit('setUser', null)
+      alert('ออกจากระบบสำเร็จ')
+      router.push('/login')
     }
    //
   }

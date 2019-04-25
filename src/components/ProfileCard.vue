@@ -26,7 +26,7 @@
                     </v-card-text>
                     
                     <v-card-actions class="justify-center">
-                        <v-btn flat class="red lighten-1 white--text">
+                        <v-btn flat @click="userSignOut" class="red lighten-1 white--text">
                         <v-icon left class='ma-1'>chevron_right</v-icon> Logout
                         </v-btn>
                     </v-card-actions>
@@ -38,7 +38,11 @@
 
 <script>
 export default {
-    
+    methods: {
+    userSignOut () {
+      this.$store.dispatch('userSignOut', {})
+        }
+    }
 }
 </script>
 
