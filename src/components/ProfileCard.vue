@@ -9,18 +9,28 @@
                     </v-card-title>
 
                     <v-card-text>
-                        <v-layout align-center justify-space-between row>
-                            <v-flex class="text-md-center" >
+                        <v-layout align-center justify-space-between row wrap>
+
+                            <v-flex md4 class="text-md-center" >
                                 <div class="body-1 grey--text">Share</div>
                                 <div class="title">30</div>
                             </v-flex>
-                            <v-flex class="text-md-center" >
+                            <v-flex md4 class="text-md-center" >
                                 <div class="body-1 grey--text">Swap</div>
                                 <div class="title">2</div>
                             </v-flex>
-                            <v-flex class="text-md-center">
+                            <v-flex md4 class="text-md-center">
                                 <div class="body-1 grey--text">Favourite</div>
                                 <div class="title">5</div>
+                            </v-flex>
+                        </v-layout>
+
+                        <v-layout align-center justify-start md5 class="mt-4">
+                            <v-flex md3>
+                                <v-icon color="amber lighten-1" class="ma-0">mdi-alpha-p-circle-outline</v-icon>
+                            </v-flex> 
+                            <v-flex md2 >
+                                <div class="title">15</div>
                             </v-flex>
                         </v-layout>
                     </v-card-text>
