@@ -1,7 +1,7 @@
 <template>
     <div class="proflie-card">
         <v-card>
-                    <v-card-title class="border">
+                    <v-card-title class="border amber lighten-2">
                         <v-avatar size="36">
                             <img src='https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortWaved&accessoriesType=Kurt&hairColor=BrownDark&facialHairType=Blank&clotheType=BlazerShirt&eyeType=Default&eyebrowType=Default&mouthType=Default&skinColor=Light' alt="">
                         </v-avatar>
@@ -25,13 +25,11 @@
                             </v-flex>
                         </v-layout>
 
-                        <v-layout align-center justify-start md5 class="mt-4">
-                            <v-flex md3>
+                        <v-layout align-center justify-start md5 class="mt-4 justify-center">
+                            <v-flex md3 class="title">
                                 <v-icon color="amber lighten-1" class="ma-0">mdi-alpha-p-circle-outline</v-icon>
+                                15
                             </v-flex> 
-                            <v-flex md2 >
-                                <div class="title">15</div>
-                            </v-flex>
                         </v-layout>
                     </v-card-text>
                     
