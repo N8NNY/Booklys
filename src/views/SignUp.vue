@@ -18,7 +18,7 @@
               id="email"
               type="email"
               v-model="email"
-              
+              :rules="[checkEmailFormat]"
               required></v-text-field>
           </v-flex>
           <v-flex>
@@ -63,69 +63,29 @@
       comparePasswords () {
         return this.password === this.passwordConfirm ? true : 'Password and confirm password don\'t match'
       },
+      checkEmailFormat(){
+          var mailre = '^[0-9]{8}@kmitl.[a-z]{2}.[a-z]{2}$'
+          return this.email.match(mailre) ? true : 'Please use your student email'
+      },
       error () {
         return this.$store.getters.getError
       },
       loading () {
         return this.$store.getters.getLoading
       }
-      /*checkEmailFormat(){
-        var email=this.email
-        //var dname=document.getElementById('dname').value;
-        var psw=this.password
-        var cpsw = this.password
-
-        var isEmailOk =false;
-        var isDnameOk =false;
-        var isPswOk = false;
-        var isCpswOk = false;
-
-    
-        var mailre = '^[0-9]{8}@kmitl.[a-z]{2}.[a-z]{2}$';
-        if(email.match(mailre)){
-            console.log("email Ok");
-            isEmailOk = true;
-        }
-        
-        else if(!email.match(mailre)){
-            alert("โปรดใช้อีเมลสถาบัน");
-        }
-        if(psw.length==0){
-            alert("โปรดใส่รหัสผ่าน");
-        }
-        else if(psw.length >0){
-            console.log("password Ok");
-            isPswOk = true;
-        }
-        if(cpsw.length==0){
-            alert("โปรดยืนยันรหัสผ่าน");
-        }
-
-        if(psw != cpsw){
-            alert("โปรดใส่รหัสผ่านให้ตรงกัน");
-        }
-        else if(psw == cpsw){
-            console.log("password match");
-            isCpswOk = true;
-        }
-        if((isEmailOk&&isDnameOk)&&(isPswOk&&isCpswOk)){
-            insertData(email,dname,psw);
-        } 
-        if(isEmailOk &&(isPswOk&&isCpswOk)){
-            return true
-        }
-        else {
-            return false
-        }
-      }*/
+      /**/
     },
     methods: {
       userSignUp () {
         if (this.comparePasswords !== true) {
           return
         }
+        if (this.checkEmailFormat !== true){
+         return
+        }
         this.$store.dispatch('userSignUp', { email: this.email, password: this.password })
       }
+      
     },
     watch: {
       error (value) {
