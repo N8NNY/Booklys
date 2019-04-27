@@ -36,8 +36,6 @@ Vue.use(Router)
     }
   })
 
-  
-  
 })*/
 const routerOptions = [
   {

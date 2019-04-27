@@ -3,33 +3,10 @@
         <v-card>
             <v-container>
                 <v-layout gow wrap>
-                    <v-flex md6>
+                    <v-flex md6 v-for="n in 20">
                         <BookCard/>
                     </v-flex>
-                    <v-flex md6>
-                        <BookCard/>
-                    </v-flex>
-                    <v-flex md6>
-                        <BookCard/>
-                    </v-flex>
-                    <v-flex md6>
-                        <BookCard/>
-                    </v-flex>
-                    <v-flex md6>
-                        <BookCard/>
-                    </v-flex>
-                    <v-flex md6>
-                        <BookCard/>
-                    </v-flex>
-                    <v-flex md6>
-                        <BookCard/>
-                    </v-flex>
-                    <v-flex md6>
-                        <BookCard/>
-                    </v-flex>
-                    <v-flex md6>
-                        <BookCard/>
-                    </v-flex>
+                    
                 </v-layout>
             </v-container>
         </v-card>

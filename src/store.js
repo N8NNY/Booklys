@@ -14,7 +14,8 @@ export default new Vuex.Store({
     loading: false,
     psw: null,
     dname: null,
-    point: 0
+    point: 0,
+    favoritepost: null
   },
   mutations: {
     setUser (state, payload) {
@@ -37,33 +38,38 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    //
+    
     userSignIn({commit}, payload) {
       commit('setLoading', true)
       firebase.auth().signInWithEmailAndPassword(payload.email, payload.password)
         .then(firebaseUser => {
-          commit('setUser', firebaseUser)
+          //console.log('FireUser is :'+firebaseUser);
+          
+          commit('setUser', payload.email)
           commit('setLoading', false)
           commit('setError', null)
+          
           alert('เข้าสู่ระบบสำเร็จ')
           var user = firebase.auth().currentUser;
-          console.log(user)
+          //console.log("User is :"+user)
           var date_lastlogin
           var date = Date(Date.now())
           var date_now = date.toString()
           var date_now_substring = date_now.substring(0,15)
           var date_lastlogin_substring
           var user_point =0
-          
-            var firebaseRef = firebase.database().ref("User").child(user.uid);
-            console.log(user.uid)
+          var firebaseRef = firebase.database().ref("User").child(user.uid);
+          console.log(user.uid)
+            console.log("User ID is :"+user.uid)
             firebaseRef.on('value' , function(dataSnapshot) {
             date_lastlogin = dataSnapshot.val().lastlogindate
             date_lastlogin_substring = date_lastlogin.substring(0,15)
             console.log("last login time : " + date_lastlogin)
             });
+            //console.log(date_lastlogin_substring == date_now_substring)
             if(date_lastlogin_substring == date_now_substring)
             {
+                //console.log(date_lastlogin_substring == date_now_substring)
                  firebaseRef.update({
                      "lastlogindate":date_now
                     })
@@ -74,6 +80,7 @@ export default new Vuex.Store({
                 user_point = dataSnapshot.val().point
                 console.log(user_point);
                 user_point+=100
+                commit('setPoint',user_point)
                 });
                 var delayInMilliseconds = 1500; //3 second
                     setTimeout(function(){  
@@ -85,8 +92,6 @@ export default new Vuex.Store({
                 },delayInMilliseconds)
                 router.push('/')
             }
-          
-          
         })
         .catch(error => {
           commit('setError', error.message)
@@ -115,17 +120,18 @@ export default new Vuex.Store({
           displayname: payload.displayname,
           lastlogindate:date_now,
           psw: payload.password,
+          //favoritepost: payload.favoritepost,
           point: 100
         }
-        
+
         //commit('userSignUp',data)
-      
         firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password)
           .then(firebaseUser => {
             useruid = firebaseUser.user.uid;
-            commit('setUser', firebaseUser)
+            commit('setUser', payload.email)
             commit('setLoading', false)
             alert('ลงทะเบียนสำเร็จ')
+            commit('setPoint',data.point)
             userRef.child(useruid).set(data)
             router.push('/')
           })
@@ -134,9 +140,5 @@ export default new Vuex.Store({
             commit('setLoading', false)
           })
       },
-
-     
-    
-   //
   }
 })
