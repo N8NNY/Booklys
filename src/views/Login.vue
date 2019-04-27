@@ -31,7 +31,7 @@
           </v-flex>
           <v-flex class="text-xs-center" mt-5>
             <v-btn primary type="submit" :disabled="loading">Sign In</v-btn>
-            <v-btn @click="changeToSignUpPage" :disabled="loading">Sign Up</v-btn>
+            <v-btn :disabled="loading"><router-link to="/signup">Sign Up</router-link></v-btn>
           </v-flex>
         </v-layout>
       </form>
@@ -73,9 +73,6 @@ export default {
       this.$store.dispatch('userSignIn', {email: this.email, password: this.password})
     },
     
-    changeToSignUpPage (){
-      this.$store.dispatch('changeToSignUpPage ', {})  
-    }
   }
 }
 </script>

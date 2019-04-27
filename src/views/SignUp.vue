@@ -23,6 +23,15 @@
           </v-flex>
           <v-flex>
             <v-text-field
+              name="displayname"
+              label="Displayname"
+              id="displayname"
+              type="displayname"
+              v-model="displayname"
+              required></v-text-field>
+          </v-flex>
+          <v-flex>
+            <v-text-field
               name="password"
               label="Password"
               id="password"
@@ -51,17 +60,21 @@
 
 <script>
   export default {
+      
     data () {
       return {
         email: '',
+        displayname: '',
         password: '',
         passwordConfirm: '',
+        lastlogindate: '',
         alert: false
       }
     },
     computed: {
       comparePasswords () {
         return this.password === this.passwordConfirm ? true : 'Password and confirm password don\'t match'
+        
       },
       checkEmailFormat(){
           var mailre = '^[0-9]{8}@kmitl.[a-z]{2}.[a-z]{2}$'
@@ -83,9 +96,8 @@
         if (this.checkEmailFormat !== true){
          return
         }
-        this.$store.dispatch('userSignUp', { email: this.email, password: this.password })
+        this.$store.dispatch('userSignUp', { email: this.email, password: this.password , displayname: this.displayname, lastlogindate: this.lastlogindate})
       }
-      
     },
     watch: {
       error (value) {
