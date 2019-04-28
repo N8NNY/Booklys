@@ -55,7 +55,7 @@ export default new Vuex.Store({
     },
     setBookName(state,payload){
       state.bookcard.bookname = payload
-    }
+    },
   },
   actions: {
      loadBook({commit}){
@@ -76,10 +76,9 @@ export default new Vuex.Store({
               })
             }
             commit('setLoading', false)
-            
             //console.log("After load : "+commit('getLoading'));
             console.log(bookcard);
-            
+            commit('setLoadedBook',bookcard)
         }).catch(
           (error) => {
             console.log(error)

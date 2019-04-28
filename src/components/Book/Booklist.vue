@@ -3,8 +3,8 @@
         <v-card >
             <v-container>
                 <v-layout gow wrap>
-                    <v-flex md6  v-for="n in this.$store.state.bookcard"  :key="n.index" :data="n"> 
-                        <BookCard/>
+                    <v-flex md6> 
+                        <BookCard v-for="n in this.$store.state.bookcard"  :key="n.index" :data="n" ></BookCard>
                     </v-flex>
                     
                 </v-layout>
@@ -38,4 +38,3 @@ export default {
   }
 }
 </script>
-

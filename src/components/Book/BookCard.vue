@@ -4,7 +4,7 @@
                 <v-avatar size="24">
                     <img src='https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortWaved&accessoriesType=Kurt&hairColor=BrownDark&facialHairType=Blank&clotheType=BlazerShirt&eyeType=Default&eyebrowType=Default&mouthType=Default&skinColor=Light' alt="">
                 </v-avatar>
-                <div><strong v-if="data.bookcard[0].owner">{{data.bookcard[0].owner}}
+                <div><strong v-if=data.owner >{{data.owner}}
   
                 </strong></div>
                 
@@ -18,7 +18,7 @@
                 <v-layout row>
                      <v-flex md4>
                         <v-img
-                            src='http://www-fp.pearsonhighered.com/assets/hip/images/bigcovers/1292096136.jpg'
+                           v-bind:src=data.imgurl
                             lazy-src='http://www-fp.pearsonhighered.com/assets/hip/images/bigcovers/1292096136.jpg'
                             aspect-ratio="1"
                             class="grey lighten-2"
@@ -39,13 +39,13 @@
                     <v-flex md8 class="ma-2">
                         <v-layout row wrap>
                             <v-flex md12 class="ma-1">
-                                <div class="title"></div>
+                                <div class="title" v-if=data.bookname>{{data.bookname}}</div>
                             </v-flex>
                             <v-flex md12 class="mx-1 grey--text">
-                                <div class="subheading">Ian Sommerville</div>
+                                <div class="subheading" v-if=data.writter>{{data.writter}}</div>
                             </v-flex>
                             <v-flex md12 class="ma-1">
-                                <div class="caption"></div>
+                                <div class="caption" v-if=data.description>{{data.description}}</div>
                             </v-flex>
                         </v-layout>
                     </v-flex>
