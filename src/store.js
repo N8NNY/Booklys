@@ -18,9 +18,7 @@ export default new Vuex.Store({
     point: 0,
     favoritepost: null,
     bookcard:[
-      {
-        
-      }
+      
     ]
   },
  
@@ -43,18 +41,26 @@ export default new Vuex.Store({
     setPoint(state,payload){
       state.point = payload
     },
+    getLoading(state){
+      return state.loading
+    },
     /* loadBook(state,payload){
       state.bookcard.push(payload)
     },*/
     setLoadedBook(state,payload){
       state.bookcard = payload
+    },
+    getLoadedBook(state){
+      return state.bookcard 
+    },
+    setBookName(state,payload){
+      state.bookcard.bookname = payload
     }
-    
   },
   actions: {
      loadBook({commit}){
-     
-      console.log('wawffwffafwafwafwafwfwfwaf')
+      commit('setLoading', true)
+      console.log("befor load : "+commit('getLoading'));
             firebase.database().ref("BookCard").once('value').then((data) => {
             const bookcard =[]
             const obj = data.val()
@@ -69,14 +75,17 @@ export default new Vuex.Store({
                 writter: obj[key].writter
               })
             }
-            // eslint-disable-next-line no-undef
+            commit('setLoading', false)
             
-            commit('setLoadedBook',bookcard)
+            //console.log("After load : "+commit('getLoading'));
+            console.log(bookcard);
+            
         }).catch(
           (error) => {
             console.log(error)
           }
         )
+        //console.log(this.state.bookcard)
       },
      /*  creatBook({commit,getters},payload){
           const bookcard
@@ -104,21 +113,21 @@ export default new Vuex.Store({
           })*/
           var firebaseRef = firebase.database().ref("User").child(user.uid);
           
-            console.log("User ID is :"+user.uid)
+            //console.log("User ID is :"+user.uid)
             firebaseRef.on('value' , function(dataSnapshot) {
             date_lastlogin = dataSnapshot.val().lastlogindate
             date_lastlogin_substring = date_lastlogin.substring(0,15)
             //console.log("last login time : " + date_lastlogin)
             displayName = dataSnapshot.val().displayname
-            console.log('dname '+displayName);
+            //console.log('dname '+displayName);
             //console.log("last "+date_lastlogin_substring);
             });
             //console.log(date_lastlogin_substring == date_now_substring)
            //console.log("last "+date_lastlogin_substring);
-           console.log("now "+date_now_substring);
+           //console.log("now "+date_now_substring);
            firebaseRef.on('value' , function(dataSnapshot) {
             user_point = dataSnapshot.val().point
-            console.log(user_point);
+            //console.log(user_point);
             
             commit('setPoint',user_point)
             commit('setDisplayName',displayName)

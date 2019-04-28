@@ -31,7 +31,11 @@ const unsubscribe = firebase.auth().onAuthStateChanged((firebaseUser) => {
     render: h => h(App),
     created () {
       store.dispatch('autoSignIn', firebaseUser)
+      /*if(this.$store.state.loading){
+        this.$store.dispatch('loadBook')
+      }*/ 
       this.$store.dispatch('loadBook')
+     
     }
   }).$mount('#app')
    unsubscribe()

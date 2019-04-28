@@ -70,6 +70,7 @@ export default {
   },
   methods: {
     userSignIn () {
+        
       this.$store.dispatch('userSignIn', {email: this.email, password: this.password})
     },
   }

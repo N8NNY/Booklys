@@ -1,9 +1,9 @@
 <template>
     <div class="bookList">
-        <v-card>
+        <v-card >
             <v-container>
                 <v-layout gow wrap>
-                    <v-flex md6 v-for="n in 1">
+                    <v-flex md6  v-for="n in this.$store.state.bookcard"  :key="n.index" :data="n"> 
                         <BookCard/>
                     </v-flex>
                     
@@ -18,8 +18,23 @@
 import BookCard from '@/components/Book/BookCard.vue'
 export default {
     name: 'bookList',
+    like:false,
     components: {
     BookCard
+  },
+   data(){
+      BookCard: {}
+  },
+  mounted(){
+      
+  },
+    created() {
+        function check () {
+      console.log("bokkkk")
+      }
+    },
+  methods: {
+       
   }
 }
 </script>
