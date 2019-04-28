@@ -19,7 +19,7 @@
                      <v-flex md4>
                         <v-img
                            v-bind:src=data.imgurl
-                            lazy-src='http://www-fp.pearsonhighered.com/assets/hip/images/bigcovers/1292096136.jpg'
+                            v-bind:lazy-src=data.imgurl
                             aspect-ratio="1"
                             class="grey lighten-2"
                         >
