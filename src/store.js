@@ -5,6 +5,7 @@ import firebase from 'firebase'
 import router from '@/router'
 
 
+
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -14,7 +15,9 @@ export default new Vuex.Store({
     loading: false,
     psw: null,
     dname: null,
-    point: 0
+    point: 0,
+    book: {}
+  
   },
   mutations: {
     setUser (state, payload) {
@@ -34,6 +37,9 @@ export default new Vuex.Store({
     },
     setPoint(state,payload){
       state.point = payload
+    },
+    setBook(state,payload){
+      state.book = payload
     }
   },
   actions: {
@@ -134,6 +140,9 @@ export default new Vuex.Store({
             commit('setLoading', false)
           })
       },
+
+      
+      
 
      
     
