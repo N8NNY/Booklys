@@ -4,7 +4,7 @@
                 <v-avatar size="24">
                     <img src='https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortWaved&accessoriesType=Kurt&hairColor=BrownDark&facialHairType=Blank&clotheType=BlazerShirt&eyeType=Default&eyebrowType=Default&mouthType=Default&skinColor=Light' alt="">
                 </v-avatar>
-                <strong>User</strong>
+                <strong>{{this.$store.book.owner}}</strong>
                 <v-spacer></v-spacer>
                 <v-btn flat icon>
                 <v-icon left class='ma-1'>favorite_border</v-icon> 

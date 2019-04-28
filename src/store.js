@@ -59,7 +59,7 @@ export default new Vuex.Store({
           commit('setLoading', false)
           commit('setError', null)
           alert('เข้าสู่ระบบสำเร็จ')
-          loadBook()
+          
           var user = firebase.auth().currentUser;
           var date_lastlogin
           var date = Date(Date.now())
@@ -104,7 +104,7 @@ export default new Vuex.Store({
                  firebaseRef.update({
                      "lastlogindate":date_now
                     })
-                    router.push('/')    
+                    
             }
             else
             { 
@@ -117,8 +117,11 @@ export default new Vuex.Store({
                         "lastlogindate":date_now
                     })
                 },delayInMilliseconds)
-                router.push('/')
+                
+                
             }
+            loadBook()
+            router.push('/')
            },delayInMilliseconds)
            
         })
@@ -185,6 +188,7 @@ export default new Vuex.Store({
                 writter:obj[key].writter
               })
             }
+            // eslint-disable-next-line no-undef
             commit('loadBook',bookcard)
         }).catch(
           (error) => {
