@@ -5,6 +5,7 @@ import firebase from 'firebase'
 import router from '@/router'
 
 
+
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -15,16 +16,14 @@ export default new Vuex.Store({
     psw: null,
     displayname: null,
     point: 0,
-    favoritepost: null
+    favoritepost: null,
+    bookcard:[
+      {
+        
+      }
+    ]
   },
-  book:{
-    bookname: null,
-    description: null,
-    imgurl: null,
-    index: 0,
-    owner: null,
-    writter: null
-  },
+ 
   mutations: {
     setUser (state, payload) {
       state.email = payload
@@ -44,13 +43,44 @@ export default new Vuex.Store({
     setPoint(state,payload){
       state.point = payload
     },
-    loadBook(state,payload){
-      state.book = payload
-    },
+    /* loadBook(state,payload){
+      state.bookcard.push(payload)
+    },*/
+    setLoadedBook(state,payload){
+      state.bookcard = payload
+    }
     
   },
   actions: {
-    
+     loadBook({commit}){
+     
+      console.log('wawffwffafwafwafwafwfwfwaf')
+            firebase.database().ref("BookCard").once('value').then((data) => {
+            const bookcard =[]
+            const obj = data.val()
+            for(let key in obj){
+              bookcard.push({
+                id: key,
+                bookname: obj[key].bookname,
+                description: obj[key].description,
+                imgurl: obj[key].imgurl,
+                index: obj[key].index,
+                owner: obj[key].owner,
+                writter: obj[key].writter
+              })
+            }
+            // eslint-disable-next-line no-undef
+            
+            commit('setLoadedBook',bookcard)
+        }).catch(
+          (error) => {
+            console.log(error)
+          }
+        )
+      },
+     /*  creatBook({commit,getters},payload){
+          const bookcard
+      },*/
     userSignIn({commit}, payload) {
       commit('setLoading', true)
       firebase.auth().signInWithEmailAndPassword(payload.email, payload.password)
@@ -68,12 +98,12 @@ export default new Vuex.Store({
           var date_lastlogin_substring
           var user_point =0
           var displayName
-          var userRef = firebase.database().ref("User")
-          userRef.orderByChild("point").on("child_added",function(data){
+         /* var userRef = firebase.database().ref("User")
+         userRef.orderByChild("point").on("child_added",function(data){
             console.log(data.val().displayname);
-          })
+          })*/
           var firebaseRef = firebase.database().ref("User").child(user.uid);
-          //console.log(user.uid)
+          
             console.log("User ID is :"+user.uid)
             firebaseRef.on('value' , function(dataSnapshot) {
             date_lastlogin = dataSnapshot.val().lastlogindate
@@ -86,8 +116,6 @@ export default new Vuex.Store({
             //console.log(date_lastlogin_substring == date_now_substring)
            //console.log("last "+date_lastlogin_substring);
            console.log("now "+date_now_substring);
-           
-        
            firebaseRef.on('value' , function(dataSnapshot) {
             user_point = dataSnapshot.val().point
             console.log(user_point);
@@ -104,7 +132,6 @@ export default new Vuex.Store({
                  firebaseRef.update({
                      "lastlogindate":date_now
                     })
-                    
             }
             else
             { 
@@ -116,11 +143,10 @@ export default new Vuex.Store({
                         "point":user_point,
                         "lastlogindate":date_now
                     })
+                
                 },delayInMilliseconds)
-                
-                
             }
-            loadBook()
+            this.loadBook
             router.push('/')
            },delayInMilliseconds)
            
@@ -155,7 +181,6 @@ export default new Vuex.Store({
           //favoritepost: payload.favoritepost,
           point: 100
         }
-
         //commit('userSignUp',data)
         firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password)
           .then(firebaseUser => {
@@ -173,29 +198,8 @@ export default new Vuex.Store({
             commit('setLoading', false)
           })
       },
-      loadBook(){
-        var bookRef = firebase.database().ref("BookCard").orderByValue('index').once('value').then((data) => {
-            const bookcard =[]
-            const obj = data.val()
-            for(let key in obj){
-              bookcard.push({
-                id: key,
-                bookname: obj[key].bookname,
-                description: obj[key].description,
-                imgurl: obj[key].imgurl,
-                index:obj[key].index,
-                owner:obj[key].owner,
-                writter:obj[key].writter
-              })
-            }
-            // eslint-disable-next-line no-undef
-            commit('loadBook',bookcard)
-        }).catch(
-          (error) => {
-            console.log(error)
-          }
-        )
-       
-      }
+     
   }
 })
+
+

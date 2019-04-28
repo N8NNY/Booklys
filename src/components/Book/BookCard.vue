@@ -4,7 +4,7 @@
                 <v-avatar size="24">
                     <img src='https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortWaved&accessoriesType=Kurt&hairColor=BrownDark&facialHairType=Blank&clotheType=BlazerShirt&eyeType=Default&eyebrowType=Default&mouthType=Default&skinColor=Light' alt="">
                 </v-avatar>
-                <strong>{{this.$store.book.owner}}</strong>
+                <strong>User</strong>
                 <v-spacer></v-spacer>
                 <v-btn flat icon>
                 <v-icon left class='ma-1'>favorite_border</v-icon> 
@@ -36,7 +36,7 @@
                     <v-flex md8 class="ma-2">
                         <v-layout row wrap>
                             <v-flex md12 class="ma-1">
-                                <div class="title">Software Engineering, Global Edition, 10/E</div>
+                                <div class="title">{{this.$store.state.bookcard}}</div>
                             </v-flex>
                             <v-flex md12 class="mx-1 grey--text">
                                 <div class="subheading">Ian Sommerville</div>
@@ -66,5 +66,6 @@ Software Engineering introduces students to the overwhelmingly important subject
 
 <script>
 export default {
+     
 }
 </script>

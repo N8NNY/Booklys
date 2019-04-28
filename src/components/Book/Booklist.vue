@@ -3,7 +3,7 @@
         <v-card>
             <v-container>
                 <v-layout gow wrap>
-                    <v-flex md6 v-for="n in 20">
+                    <v-flex md6 v-for="n in 1">
                         <BookCard/>
                     </v-flex>
                     
