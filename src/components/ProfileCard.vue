@@ -5,8 +5,8 @@
                         <v-avatar size="36">
                             <img src='https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortWaved&accessoriesType=Kurt&hairColor=BrownDark&facialHairType=Blank&clotheType=BlazerShirt&eyeType=Default&eyebrowType=Default&mouthType=Default&skinColor=Light' alt="">
                         </v-avatar>
-                        <strong>{{this.$store.state.email}}<br></strong>
-                         {{this.$store.state.dname}}
+                        <strong>{{this.$store.state.displayname}}</strong>
+                         
                     </v-card-title>
 
                     <v-card-text>
