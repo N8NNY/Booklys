@@ -5,7 +5,7 @@
     <v-container>
       <v-layout row>
 
-        <v-flex md2 class="ma-2">
+        <v-flex md3 class="ma-2">
           <ProfileCard/>
         </v-flex>
 
