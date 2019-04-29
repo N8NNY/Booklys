@@ -28,9 +28,11 @@
 
                         <v-layout align-center justify-start md5 class="mt-4 justify-center">
                             <v-flex md3 class="title">
+
                                 
                                 <v-icon color="amber lighten-1" class="ma-0">mdi-alpha-p-circle-outline </v-icon>
                                 <p>{{this.$store.state.point}}</p>
+
                             </v-flex> 
                         </v-layout>
                     </v-card-text>
