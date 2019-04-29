@@ -140,6 +140,36 @@ export default new Vuex.Store({
             commit('setLoading', false)
           })
       },
+      PostBook ({commit}, payload) {
+
+        var database = firebase.database()
+        var userRef = database.ref('BookCard')
+
+        var date = Date(Date.now())
+        var date_now = date.toString()
+        var date_post = date_now.substring(0,24)
+        var image = payload.imagefile
+
+        commit('setError', null)
+        const data = {
+          bookname: payload.bookname,
+          desciption: payload.desciption,
+          imgulr:"",
+          index: -4,
+          owner:this.state.dname,
+          writter: payload.writter,
+        }
+        userRef.child(date_post).set(data)
+
+        console.log(image[0]);
+        console.log(image[0].name);
+        firebase.storage(image[0].name).ref().put(image[0]).then(response => {
+          response.ref.getDownloadURL().then((downloadURL) => {
+             firebase.database().ref('BookCard').child(date_post).update({"imgulr":downloadURL})
+        })})                 
+       .catch(err => console.log(err))
+      
+      },
 
       
       
