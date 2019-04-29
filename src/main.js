@@ -37,6 +37,9 @@ const unsubscribe = firebase.auth().onAuthStateChanged((firebaseUser) => {
     store,
     Snotify,
     render: h => h(App),
+    beforeCreate() {
+      Vue.$snotify = this.$snotify;
+    },
     created () {
       store.dispatch('autoSignIn', firebaseUser)
       this.$store.dispatch('loadBook')

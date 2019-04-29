@@ -54,7 +54,7 @@
             </v-card-text>
             
             <v-card-actions class="justify-space-around">
-                <v-btn v-on:click="setNoti" flat class="amber accent-3 white--text" v>
+                <v-btn @click="setNoti" flat class="amber accent-3 white--text" v>
                  Swap
                 </v-btn>
                 <v-btn flat class="amber accent-3 white--text">
@@ -70,8 +70,9 @@ export default {
      props: ['data'],
     methods: {
         setNoti () {
+            this.$snotify.success('คำขอแลกถูกส่งไปแล้ว');
             this.$store.dispatch('setNoti')
-            //this.$store.dispatch('setNoti', true)
+            
             }
         }
 }

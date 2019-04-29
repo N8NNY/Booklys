@@ -78,6 +78,7 @@ export default new Vuex.Store({
       userRef.update({
         "isnoti":true
       })
+      //dispatch('checkNoti')
       
       /*userRef.on('value' , function(dataSnapshot) {
         notistatus = dataSnapshot.val().isnoti
@@ -85,15 +86,17 @@ export default new Vuex.Store({
         
       });*/
     },checkNoti({dispatch}){
+      //Vue.$snotify.success('Example body content');
       var notistatus
       var user = firebase.auth().currentUser
       var userRef = firebase.database().ref("User").child(user.uid)
       userRef.on('value' , function(dataSnapshot) {
         notistatus = dataSnapshot.val().isnoti
         
-        
+
         if (notistatus == true){
-        dispatch('displayNotification')
+        //dispatch('displayNotification')
+        //showNotification()
           //console.log('notistatus: '+notistatus);
         }
         else{
@@ -103,8 +106,8 @@ export default new Vuex.Store({
       });
 
     },displayNotification() {
-      console.log('helloooooooooooooo');
-      //vm.$snotify.success('Example body content');
+      //console.log('helloooooooooooooo');
+      
     },
       
     
@@ -141,6 +144,7 @@ export default new Vuex.Store({
       },*/
     userSignIn({commit}, payload) {
       commit('setLoading', true)
+      
       firebase.auth().signInWithEmailAndPassword(payload.email, payload.password)
         .then(firebaseUser => {
           commit('setUser', payload.email)
