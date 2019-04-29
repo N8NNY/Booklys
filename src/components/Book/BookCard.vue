@@ -4,7 +4,7 @@
                 <v-avatar size="24">
                     <img src='https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortWaved&accessoriesType=Kurt&hairColor=BrownDark&facialHairType=Blank&clotheType=BlazerShirt&eyeType=Default&eyebrowType=Default&mouthType=Default&skinColor=Light' alt="">
                 </v-avatar>
-                <strong>User</strong>
+                <strong>{{book.owner}}</strong>
                 <v-spacer></v-spacer>
                 <v-btn flat icon>
                 <v-icon left class='ma-1'>favorite_border</v-icon> 
@@ -36,15 +36,13 @@
                     <v-flex md8 class="ma-2">
                         <v-layout row wrap>
                             <v-flex md12 class="ma-1">
-                                <div class="title">Software Engineering, Global Edition, 10/E</div>
+                                <div class="title">{{book.bookname}}</div>
                             </v-flex>
                             <v-flex md12 class="mx-1 grey--text">
-                                <div class="subheading">Ian Sommerville</div>
+                                <div class="subheading">{{book.writter}}</div>
                             </v-flex>
                             <v-flex md12 class="ma-1">
-                                <div class="caption">The Fundamental Practice of Software Engineering
-
-Software Engineering introduces students to the overwhelmingly important subject of software programming and development. In the past few years, computer systems have come to dominate not just our technological growth, but the foundations of our world’s major industries. This text seeks to lay out the fundamental concepts of this huge and continually growing subject area in a clear and comprehensive manner.</div>
+                                <div class="caption">{{book.description}}</div>
                             </v-flex>
                         </v-layout>
                     </v-flex>
@@ -66,5 +64,6 @@ Software Engineering introduces students to the overwhelmingly important subject
 
 <script>
 export default {
+    props : ['book']
 }
 </script>

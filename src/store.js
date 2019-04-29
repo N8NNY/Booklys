@@ -16,7 +16,7 @@ export default new Vuex.Store({
     psw: null,
     dname: null,
     point: 0,
-    book: {}
+    bookLists: []
   
   },
   mutations: {
@@ -38,8 +38,8 @@ export default new Vuex.Store({
     setPoint(state,payload){
       state.point = payload
     },
-    setBook(state,payload){
-      state.book = payload
+    serBooklists(state,payload) {
+      state.bookLists = payload
     }
   },
   actions: {
@@ -143,9 +143,9 @@ export default new Vuex.Store({
 
       
       
+  },
 
-     
-    
-   //
+  getters:{
+
   }
 })
