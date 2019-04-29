@@ -69,12 +69,16 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    setNoti({commit}){
+    /*getOwner({commit},payload){
+
+    },*/
+    setNoti({commit},payload){
       commit('setNoti',true)
+      //alert(payload.owner)
       //alert(commit('getNoti'))
       //alert(this.state.isnoti)
       var user = firebase.auth().currentUser
-      var userRef = firebase.database().ref("User").child(user.uid)
+      var userRef = firebase.database().ref("User").child(payload.owner)
       userRef.update({
         "isnoti":true
       })

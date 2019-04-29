@@ -71,8 +71,11 @@ export default {
     methods: {
         setNoti () {
             this.$snotify.success('คำขอแลกถูกส่งไปแล้ว');
-            this.$store.dispatch('setNoti')
-            
+            this.$store.dispatch('setNoti',{owner:this.data.owner})
+            },
+            getOwner(){
+                //alert(this.data.owner)
+                return this.data.owner
             }
         }
 }
