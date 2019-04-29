@@ -5,7 +5,8 @@
                         <v-avatar size="36">
                             <img src='https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortWaved&accessoriesType=Kurt&hairColor=BrownDark&facialHairType=Blank&clotheType=BlazerShirt&eyeType=Default&eyebrowType=Default&mouthType=Default&skinColor=Light' alt="">
                         </v-avatar>
-                        <strong>Nonny</strong>
+                        <strong>{{this.$store.state.displayname}}</strong>
+                         
                     </v-card-title>
 
                     <v-card-text>
@@ -27,8 +28,11 @@
 
                         <v-layout align-center justify-start md5 class="mt-4 justify-center">
                             <v-flex md3 class="title">
-                                <v-icon color="amber lighten-1" class="ma-0">mdi-alpha-p-circle-outline</v-icon>
-                                15
+
+                                
+                                <v-icon color="amber lighten-1" class="ma-0">mdi-alpha-p-circle-outline </v-icon>
+                                <p>{{this.$store.state.point}}</p>
+
                             </v-flex> 
                         </v-layout>
                     </v-card-text>

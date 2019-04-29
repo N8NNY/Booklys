@@ -1,10 +1,13 @@
 <template>
-    <v-card class="ma-2">
+    <v-card class="ma-2" >
             <v-card-title>
                 <v-avatar size="24">
                     <img src='https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortWaved&accessoriesType=Kurt&hairColor=BrownDark&facialHairType=Blank&clotheType=BlazerShirt&eyeType=Default&eyebrowType=Default&mouthType=Default&skinColor=Light' alt="">
                 </v-avatar>
-                <strong>User</strong>
+                <div><strong v-if=data.owner >{{data.owner}}
+  
+                </strong></div>
+                
                 <v-spacer></v-spacer>
                 <v-btn flat icon>
                 <v-icon left class='ma-1'>favorite_border</v-icon> 
@@ -15,8 +18,8 @@
                 <v-layout row>
                      <v-flex md4>
                         <v-img
-                            src='http://www-fp.pearsonhighered.com/assets/hip/images/bigcovers/1292096136.jpg'
-                            lazy-src='http://www-fp.pearsonhighered.com/assets/hip/images/bigcovers/1292096136.jpg'
+                           v-bind:src=data.imgurl
+                            v-bind:lazy-src=data.imgurl
                             aspect-ratio="1"
                             class="grey lighten-2"
                         >
@@ -36,15 +39,13 @@
                     <v-flex md8 class="ma-2">
                         <v-layout row wrap>
                             <v-flex md12 class="ma-1">
-                                <div class="title">Software Engineering, Global Edition, 10/E</div>
+                                <div class="title" v-if=data.bookname>{{data.bookname}}</div>
                             </v-flex>
                             <v-flex md12 class="mx-1 grey--text">
-                                <div class="subheading">Ian Sommerville</div>
+                                <div class="subheading" v-if=data.writter>{{data.writter}}</div>
                             </v-flex>
                             <v-flex md12 class="ma-1">
-                                <div class="caption">The Fundamental Practice of Software Engineering
-
-Software Engineering introduces students to the overwhelmingly important subject of software programming and development. In the past few years, computer systems have come to dominate not just our technological growth, but the foundations of our world’s major industries. This text seeks to lay out the fundamental concepts of this huge and continually growing subject area in a clear and comprehensive manner.</div>
+                                <div class="caption" v-if=data.description>{{data.description}}</div>
                             </v-flex>
                         </v-layout>
                     </v-flex>
@@ -53,7 +54,7 @@ Software Engineering introduces students to the overwhelmingly important subject
             </v-card-text>
             
             <v-card-actions class="justify-space-around">
-                <v-btn flat class="amber accent-3 white--text">
+                <v-btn v-on:click="setNoti" flat class="amber accent-3 white--text" v>
                  Swap
                 </v-btn>
                 <v-btn flat class="amber accent-3 white--text">
@@ -66,5 +67,14 @@ Software Engineering introduces students to the overwhelmingly important subject
 
 <script>
 export default {
+     props: ['data'],
+    methods: {
+        setNoti () {
+            this.$store.dispatch('setNoti')
+            //this.$store.dispatch('setNoti', true)
+            }
+        }
 }
+
+
 </script>

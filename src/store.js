@@ -3,6 +3,11 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import firebase from 'firebase'
 import router from '@/router'
+//import { stat } from 'fs';
+import Snotify from 'vue-snotify';
+// You also need to import the styles. If you're using webpack's css-loader, you can do so here:
+import 'vue-snotify/styles/material.css';
+
 
 
 Vue.use(Vuex)
@@ -13,9 +18,15 @@ export default new Vuex.Store({
     error: null,
     loading: false,
     psw: null,
-    dname: null,
-    point: 0
+    displayname: null,
+    point: 0,
+    favoritepost: null,
+    isnoti: false,
+    bookcard:[
+      
+    ]
   },
+ 
   mutations: {
     setUser (state, payload) {
       state.email = payload
@@ -30,51 +41,158 @@ export default new Vuex.Store({
       state.psw = payload
     },
     setDisplayName(state,payload){
-      state.dname = payload
+      state.displayname = payload
     },
     setPoint(state,payload){
       state.point = payload
+    },
+    getLoading(state){
+      return state.loading
+    },
+    /* loadBook(state,payload){
+      state.bookcard.push(payload)
+    },*/
+    setLoadedBook(state,payload){
+      state.bookcard = payload
+    },
+    getLoadedBook(state){
+      return state.bookcard 
+    },
+    setBookName(state,payload){
+      state.bookcard.bookname = payload
+    },
+    setNoti(state,payload){
+      state.isnoti = payload
+    },
+    getNoti(state){
+      return state.isnoti
     }
   },
   actions: {
-    //
+    setNoti({commit}){
+      commit('setNoti',true)
+      //alert(commit('getNoti'))
+      //alert(this.state.isnoti)
+      var user = firebase.auth().currentUser
+      var userRef = firebase.database().ref("User").child(user.uid)
+      userRef.update({
+        "isnoti":true
+      })
+      
+      /*userRef.on('value' , function(dataSnapshot) {
+        notistatus = dataSnapshot.val().isnoti
+        
+        
+      });*/
+    },checkNoti({dispatch}){
+      var notistatus
+      var user = firebase.auth().currentUser
+      var userRef = firebase.database().ref("User").child(user.uid)
+      userRef.on('value' , function(dataSnapshot) {
+        notistatus = dataSnapshot.val().isnoti
+        
+        
+        if (notistatus == true){
+        dispatch('displayNotification')
+          //console.log('notistatus: '+notistatus);
+        }
+        else{
+          console.log('fuckyou');
+          
+        }
+      });
+
+    },displayNotification() {
+      console.log('helloooooooooooooo');
+      //vm.$snotify.success('Example body content');
+    },
+      
+    
+     loadBook({commit}){
+      commit('setLoading', true)
+      console.log("befor load : "+commit('getLoading'));
+            firebase.database().ref("BookCard").once('value').then((data) => {
+            const bookcard =[]
+            const obj = data.val()
+            for(let key in obj){
+              bookcard.push({
+                id: key,
+                bookname: obj[key].bookname,
+                description: obj[key].description,
+                imgurl: obj[key].imgurl,
+                index: obj[key].index,
+                owner: obj[key].owner,
+                writter: obj[key].writter
+              })
+            }
+            commit('setLoading', false)
+            //console.log("After load : "+commit('getLoading'));
+            console.log(bookcard);
+            commit('setLoadedBook',bookcard)
+        }).catch(
+          (error) => {
+            console.log(error)
+          }
+        )
+        //console.log(this.state.bookcard)
+      },
+     /*  creatBook({commit,getters},payload){
+          const bookcard
+      },*/
     userSignIn({commit}, payload) {
       commit('setLoading', true)
       firebase.auth().signInWithEmailAndPassword(payload.email, payload.password)
         .then(firebaseUser => {
-          commit('setUser', firebaseUser)
+          commit('setUser', payload.email)
           commit('setLoading', false)
           commit('setError', null)
           alert('เข้าสู่ระบบสำเร็จ')
+          
           var user = firebase.auth().currentUser;
-          console.log(user)
           var date_lastlogin
           var date = Date(Date.now())
           var date_now = date.toString()
           var date_now_substring = date_now.substring(0,15)
           var date_lastlogin_substring
           var user_point =0
+          var displayName
+         /* var userRef = firebase.database().ref("User")
+         userRef.orderByChild("point").on("child_added",function(data){
+            console.log(data.val().displayname);
+          })*/
+          var firebaseRef = firebase.database().ref("User").child(user.uid);
           
-            var firebaseRef = firebase.database().ref("User").child(user.uid);
-            console.log(user.uid)
+            //console.log("User ID is :"+user.uid)
             firebaseRef.on('value' , function(dataSnapshot) {
             date_lastlogin = dataSnapshot.val().lastlogindate
             date_lastlogin_substring = date_lastlogin.substring(0,15)
-            console.log("last login time : " + date_lastlogin)
+            //console.log("last login time : " + date_lastlogin)
+            displayName = dataSnapshot.val().displayname
+            //console.log('dname '+displayName);
+            //console.log("last "+date_lastlogin_substring);
             });
+            //console.log(date_lastlogin_substring == date_now_substring)
+           //console.log("last "+date_lastlogin_substring);
+           //console.log("now "+date_now_substring);
+           firebaseRef.on('value' , function(dataSnapshot) {
+            user_point = dataSnapshot.val().point
+            //console.log(user_point);
+            commit('setPoint',user_point)
+            commit('setDisplayName',displayName)
+            });
+
+           var delayInMilliseconds = 1500;
+           setTimeout(function(){
             if(date_lastlogin_substring == date_now_substring)
             {
+                //console.log(date_lastlogin_substring == date_now_substring)
                  firebaseRef.update({
                      "lastlogindate":date_now
                     })
             }
             else
             { 
-                firebaseRef.on('value' , function(dataSnapshot) {
-                user_point = dataSnapshot.val().point
-                console.log(user_point);
-                user_point+=100
-                });
+              user_point+=100
                 var delayInMilliseconds = 1500; //3 second
                     setTimeout(function(){  
                     alert("รางวัลล็อกอินรายวัน + 100 points!!!")
@@ -82,11 +200,13 @@ export default new Vuex.Store({
                         "point":user_point,
                         "lastlogindate":date_now
                     })
+                
                 },delayInMilliseconds)
-                router.push('/')
             }
-          
-          
+            //this.loadBook
+            router.push('/')
+           },delayInMilliseconds)
+           
         })
         .catch(error => {
           commit('setError', error.message)
@@ -115,17 +235,18 @@ export default new Vuex.Store({
           displayname: payload.displayname,
           lastlogindate:date_now,
           psw: payload.password,
+          //favoritepost: payload.favoritepost,
           point: 100
         }
-        
         //commit('userSignUp',data)
-      
         firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password)
           .then(firebaseUser => {
             useruid = firebaseUser.user.uid;
-            commit('setUser', firebaseUser)
+            commit('setUser', payload.email)
             commit('setLoading', false)
             alert('ลงทะเบียนสำเร็จ')
+            commit('setPoint',data.point)
+            commit('setDisplayName',data.displayname)
             userRef.child(useruid).set(data)
             router.push('/')
           })
@@ -134,9 +255,9 @@ export default new Vuex.Store({
             commit('setLoading', false)
           })
       },
-
+      
      
-    
-   //
   }
 })
+
+

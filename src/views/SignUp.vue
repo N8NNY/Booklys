@@ -68,13 +68,15 @@
         password: '',
         passwordConfirm: '',
         lastlogindate: '',
+        favoritepost: '',
+        notification: '',
+        //swap: '',
         alert: false
       }
     },
     computed: {
       comparePasswords () {
         return this.password === this.passwordConfirm ? true : 'Password and confirm password don\'t match'
-        
       },
       checkEmailFormat(){
           var mailre = '^[0-9]{8}@kmitl.[a-z]{2}.[a-z]{2}$'
