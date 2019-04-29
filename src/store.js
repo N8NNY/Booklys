@@ -3,6 +3,10 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import firebase from 'firebase'
 import router from '@/router'
+//import { stat } from 'fs';
+import Snotify from 'vue-snotify';
+// You also need to import the styles. If you're using webpack's css-loader, you can do so here:
+import 'vue-snotify/styles/material.css';
 
 
 
@@ -17,6 +21,7 @@ export default new Vuex.Store({
     displayname: null,
     point: 0,
     favoritepost: null,
+    isnoti: false,
     bookcard:[
       
     ]
@@ -56,8 +61,53 @@ export default new Vuex.Store({
     setBookName(state,payload){
       state.bookcard.bookname = payload
     },
+    setNoti(state,payload){
+      state.isnoti = payload
+    },
+    getNoti(state){
+      return state.isnoti
+    }
   },
   actions: {
+    setNoti({commit}){
+      commit('setNoti',true)
+      //alert(commit('getNoti'))
+      //alert(this.state.isnoti)
+      var user = firebase.auth().currentUser
+      var userRef = firebase.database().ref("User").child(user.uid)
+      userRef.update({
+        "isnoti":true
+      })
+      
+      /*userRef.on('value' , function(dataSnapshot) {
+        notistatus = dataSnapshot.val().isnoti
+        
+        
+      });*/
+    },checkNoti({dispatch}){
+      var notistatus
+      var user = firebase.auth().currentUser
+      var userRef = firebase.database().ref("User").child(user.uid)
+      userRef.on('value' , function(dataSnapshot) {
+        notistatus = dataSnapshot.val().isnoti
+        
+        
+        if (notistatus == true){
+        dispatch('displayNotification')
+          //console.log('notistatus: '+notistatus);
+        }
+        else{
+          console.log('fuckyou');
+          
+        }
+      });
+
+    },displayNotification() {
+      console.log('helloooooooooooooo');
+      //vm.$snotify.success('Example body content');
+    },
+      
+    
      loadBook({commit}){
       commit('setLoading', true)
       console.log("befor load : "+commit('getLoading'));
@@ -127,7 +177,6 @@ export default new Vuex.Store({
            firebaseRef.on('value' , function(dataSnapshot) {
             user_point = dataSnapshot.val().point
             //console.log(user_point);
-            
             commit('setPoint',user_point)
             commit('setDisplayName',displayName)
             });
@@ -154,7 +203,7 @@ export default new Vuex.Store({
                 
                 },delayInMilliseconds)
             }
-            this.loadBook
+            //this.loadBook
             router.push('/')
            },delayInMilliseconds)
            
@@ -206,6 +255,7 @@ export default new Vuex.Store({
             commit('setLoading', false)
           })
       },
+      
      
   }
 })

@@ -6,7 +6,11 @@ import store from './store'
 
 import firebase from 'firebase'
 import {firebaseConfig} from './config'
+import Snotify from 'vue-snotify';
+// You also need to import the styles. If you're using webpack's css-loader, you can do so here:
+import 'vue-snotify/styles/material.css'; // or dark.css or simple.css
 
+Vue.use(Snotify);
 firebase.initializeApp(firebaseConfig);
 Vue.config.productionTip = false
 
@@ -28,13 +32,12 @@ const unsubscribe = firebase.auth().onAuthStateChanged((firebaseUser) => {
   new Vue({
     router,
     store,
+    Snotify,
     render: h => h(App),
     created () {
       store.dispatch('autoSignIn', firebaseUser)
-      /*if(this.$store.state.loading){
-        this.$store.dispatch('loadBook')
-      }*/ 
       this.$store.dispatch('loadBook')
+      this.$store.dispatch('checkNoti')
      
     }
   }).$mount('#app')

@@ -54,7 +54,7 @@
             </v-card-text>
             
             <v-card-actions class="justify-space-around">
-                <v-btn flat class="amber accent-3 white--text">
+                <v-btn v-on:click="setNoti" flat class="amber accent-3 white--text" v>
                  Swap
                 </v-btn>
                 <v-btn flat class="amber accent-3 white--text">
@@ -67,7 +67,13 @@
 
 <script>
 export default {
-     props: ['data']
+     props: ['data'],
+    methods: {
+        setNoti () {
+            this.$store.dispatch('setNoti')
+            //this.$store.dispatch('setNoti', true)
+            }
+        }
 }
 
 
