@@ -3,10 +3,10 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import firebase from 'firebase'
 import router from '@/router'
-//import { stat } from 'fs';
-import Snotify from 'vue-snotify';
 // You also need to import the styles. If you're using webpack's css-loader, you can do so here:
 import 'vue-snotify/styles/material.css';
+// eslint-disable-next-line no-unused-vars
+import {app} from '@/config'
 
 
 
@@ -20,7 +20,7 @@ export default new Vuex.Store({
     loading: false,
     psw: null,
     dname: null,
-    bookLists: []
+    bookLists: [],
     displayname: null,
     point: 0,
     favoritepost: null,
@@ -48,7 +48,8 @@ export default new Vuex.Store({
       state.point = payload
     },
     serBooklists(state,payload) {
-      state.bookLists = payload
+      state.bookLists = payload 
+    },
     getLoading(state){
       return state.loading
     },
@@ -109,43 +110,40 @@ export default new Vuex.Store({
       console.log('helloooooooooooooo');
       //vm.$snotify.success('Example body content');
     },
-      
-    
-     loadBook({commit}){
-      commit('setLoading', true)
-      console.log("befor load : "+commit('getLoading'));
-            firebase.database().ref("BookCard").once('value').then((data) => {
-            const bookcard =[]
-            const obj = data.val()
-            for(let key in obj){
-              bookcard.push({
-                id: key,
-                bookname: obj[key].bookname,
-                description: obj[key].description,
-                imgurl: obj[key].imgurl,
-                index: obj[key].index,
-                owner: obj[key].owner,
-                writter: obj[key].writter
-              })
-            }
-            commit('setLoading', false)
-            //console.log("After load : "+commit('getLoading'));
-            console.log(bookcard);
-            commit('setLoadedBook',bookcard)
-        }).catch(
-          (error) => {
-            console.log(error)
+    loadBook({commit}){
+    commit('setLoading', true)
+    console.log("befor load : "+commit('getLoading'));
+          firebase.database().ref("BookCard").once('value').then((data) => {
+          const bookcard =[]
+          const obj = data.val()
+          console.log('obj',obj)
+          console.log('key :', obj["BookCard1"].bookname)  
+          for(let key in obj){
+            
+            bookcard.push({
+              id: key,
+              bookname: obj[key].bookname,
+              description: obj[key].description,
+              imgurl: obj[key].imgurl,
+              index: obj[key].index,
+              owner: obj[key].owner,
+              writter: obj[key].writter
+            })
           }
-        )
-        //console.log(this.state.bookcard)
-      },
-     /*  creatBook({commit,getters},payload){
-          const bookcard
-      },*/
+          commit('setLoading', false)
+          //console.log("After load : "+commit('getLoading'));
+          console.log(bookcard);
+          commit('setLoadedBook',bookcard)
+      }).catch(
+        (error) => {
+          console.log(error)
+        }
+      )
+    },
     userSignIn({commit}, payload) {
       commit('setLoading', true)
       firebase.auth().signInWithEmailAndPassword(payload.email, payload.password)
-        .then(firebaseUser => {
+        .then(() => {
           commit('setUser', payload.email)
           commit('setLoading', false)
           commit('setError', null)
@@ -273,7 +271,7 @@ export default new Vuex.Store({
           bookname: payload.bookname,
           desciption: payload.desciption,
           imgulr:"",
-          index: -4,
+          index: -5,
           owner:this.state.dname,
           writter: payload.writter,
         }

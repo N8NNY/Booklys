@@ -5,7 +5,7 @@
                     <img src='https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortWaved&accessoriesType=Kurt&hairColor=BrownDark&facialHairType=Blank&clotheType=BlazerShirt&eyeType=Default&eyebrowType=Default&mouthType=Default&skinColor=Light' alt="">
                 </v-avatar>
                 
-                <div><strong v-if=data.owner >{{data.owner}}
+                <div><strong v-if="data.owner" >{{data.owner}}
   
                 </strong></div>
                 
@@ -15,9 +15,9 @@
                 </v-btn>
             </v-card-title>
 
-            <v-card-text>
-                <v-layout row>
-                     <v-flex md4>
+            <v-card-text >
+                <v-layout row >
+                     <v-flex md4 >
                         <v-img
                            v-bind:src=data.imgurl
                             v-bind:lazy-src=data.imgurl
@@ -41,13 +41,13 @@
                         <v-layout row wrap>
                             <v-flex md12 class="ma-1">
 
-                                <div class="title" v-if=data.bookname>{{data.bookname}}</div>
+                                <div class="title" v-if="data.bookname">{{data.bookname}}</div>
                             </v-flex>
                             <v-flex md12 class="mx-1 grey--text">
-                                <div class="subheading" v-if=data.writter>{{data.writter}}</div>
+                                <div class="subheading" v-if="data.writter">{{data.writter}}</div>
                             </v-flex>
                             <v-flex md12 class="ma-1">
-                                <div class="caption" v-if=data.description>{{data.description}}</div>
+                                <div class="caption text-truncate" v-if="data.description">{{data.description}}</div>
 
                             </v-flex>
                         </v-layout>
@@ -77,7 +77,13 @@ export default {
             this.$store.dispatch('setNoti')
             //this.$store.dispatch('setNoti', true)
             }
+        },
+    computed: {
+        getDescription : function (){
+            return this.data.description
         }
+    }
+
 }
 
 

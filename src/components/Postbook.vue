@@ -69,7 +69,7 @@ export default {
         imageName: '',
         bookname: '',
         writter: '',
-        desciption: '',
+        desciption: "",
         file: null,
       }
     },
