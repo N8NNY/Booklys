@@ -34,28 +34,55 @@
 
 <script>
 import firebase from 'firebase'
-
+import Vue from 'vue'
 export default {
    
     methods: {
     showNotification() {
     var user = firebase.auth().currentUser
-      var userRef = firebase.database().ref("User").child(user.uid)
-      userRef.update({
-        "isnoti":false
-      })
-      this.$snotify.confirm('Example body content', 'Example title', {
-        timeout: 30000,
-        showProgressBar: true,
-        closeOnClick: false,
-        pauseOnHover: true,
-        buttons: [
-            {text: 'Yes', action: (toast) => {console.log('Clicked: Yes'), this.$snotify.remove(toast.id);}, bold: false},
-            {text: 'No', action: (toast) => {console.log('Clicked: No'), this.$snotify.remove(toast.id);},bold: false},
-            //{text: 'Later', action: (toast) => {console.log('Clicked: Later'); this.$snotify.remove(toast.id); } },
-            {text: 'Close', action: (toast) => {console.log('Clicked: No'), this.$snotify.remove(toast.id);}, bold: true},
-        ]
-        });
+    var userid = user.uid
+    var notistatus
+    var requester
+    var requesterRef = firebase.database().ref("Requester").child(userid)
+    requesterRef.on('value',function(dataSnapshot){
+        requester = dataSnapshot.val().requester
+    })
+    console.log("requester is : "+requester);
+    
+    var userRef = firebase.database().ref("User").child(user.uid)
+      userRef.on('value' , function(dataSnapshot) {
+          notistatus = dataSnapshot.val().isnoti
+          
+          if (notistatus == true){
+              Vue.$snotify.confirm('มีคนอยากแลกหนังสือกับคุณ', 'แจ้งเตือน!', {
+                timeout: 30000,
+                showProgressBar: true,
+                closeOnClick: false,
+                pauseOnHover: true,
+                preventDuplicates: true,
+                buttons: [
+                    {text: 'Yes', action: (toast) => {this.$store.dispatch('saveDetail',{owner:userid,swapper:requester});}, bold: false},
+                     //{text: 'Yes', action: (toast) => {console.log(userid+" : "+requester)}, bold: false},
+                    
+                    {text: 'No', action: (toast) => {console.log('Clicked: No');},bold: false},
+                    //{text: 'Later', action: (toast) => {console.log('Clicked: Later'); this.$snotify.remove(toast.id); } },
+                    {text: 'Close', action: (toast) => {console.log('Clicked: No'), Vue.$snotify.remove(toast.id);}, bold: true},
+                ]
+                });
+                /*userRef.update({
+                    "isnoti":false
+                })*/
+            
+          }
+        //     else{
+                
+        //       alert('ไม่มีการแจ้งเตือน')
+              
+        //   }
+          
+          });
+      
+      
             
     }
   }

@@ -66,12 +66,17 @@
 </template>
 
 <script>
+import firebase from 'firebase'
 export default {
+    
      props: ['data'],
     methods: {
         setNoti () {
+
+            var user = firebase.auth().currentUser
+            var userid = user.uid
             this.$snotify.success('คำขอแลกถูกส่งไปแล้ว');
-            this.$store.dispatch('setNoti',{owner:this.data.owner})
+            this.$store.dispatch('setNoti',{owner:this.data.owner,swapper:userid})
             },
             getOwner(){
                 //alert(this.data.owner)

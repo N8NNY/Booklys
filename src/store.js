@@ -74,34 +74,42 @@ export default new Vuex.Store({
     },*/
     setNoti({commit},payload){
       commit('setNoti',true)
-      //alert(payload.owner)
-      //alert(commit('getNoti'))
-      //alert(this.state.isnoti)
-      var user = firebase.auth().currentUser
+      var date = Date(Date.now())
+      var date_now = date.toString()
+      var date_post = date_now.substring(0,24)
       var userRef = firebase.database().ref("User").child(payload.owner)
       userRef.update({
         "isnoti":true
       })
-      //dispatch('checkNoti')
+      var requesterRef = firebase.database().ref("Requester").child(payload.owner)
+      requesterRef.set({
+        "requester":payload.swapper,
+        "requesto":payload.owner
+      })
+     
       
-      /*userRef.on('value' , function(dataSnapshot) {
-        notistatus = dataSnapshot.val().isnoti
-        
-        
-      });*/
-    },checkNoti({dispatch}){
+    },/*checkNoti(){
       //Vue.$snotify.success('Example body content');
       var notistatus
       var user = firebase.auth().currentUser
       var userRef = firebase.database().ref("User").child(user.uid)
       userRef.on('value' , function(dataSnapshot) {
         notistatus = dataSnapshot.val().isnoti
-        
-
+  
         if (notistatus == true){
-        //dispatch('displayNotification')
-        //showNotification()
-          //console.log('notistatus: '+notistatus);
+          Vue.$snotify.confirm('Example body content', 'Example title', {
+            timeout: 30000,
+            showProgressBar: true,
+            closeOnClick: false,
+            pauseOnHover: true,
+            preventDuplicates: true,
+            buttons: [
+                {text: 'Yes', action: (toast) => {console.log('Clicked: Yes'), Vue.$snotify.remove(toast.id);}, bold: false},
+                {text: 'No', action: (toast) => {console.log('Clicked: No'), Vue.$snotify.remove(toast.id);},bold: false},
+                //{text: 'Later', action: (toast) => {console.log('Clicked: Later'); this.$snotify.remove(toast.id); } },
+                {text: 'Close', action: (toast) => {console.log('Clicked: No'), Vue.$snotify.remove(toast.id);}, bold: true},
+            ]
+            });
         }
         else{
           console.log('fuckyou');
@@ -109,12 +117,18 @@ export default new Vuex.Store({
         }
       });
 
-    },displayNotification() {
-      //console.log('helloooooooooooooo');
-      
-    },
-      
-    
+    },*/
+      saveDetail(payload){
+      var date = Date(Date.now())
+      var date_now = date.toString()
+      var date_post = date_now.substring(0,24)
+      var detaillRef = firebase.database().ref("TradeDetail").child(date_post)
+      detaillRef.set({
+        "owner":payload.owner,
+        "swapper":payload.swapper
+      })
+      },
+   
      loadBook({commit}){
       commit('setLoading', true)
       console.log("befor load : "+commit('getLoading'));
