@@ -249,6 +249,7 @@ export default new Vuex.Store({
       commit('setUser', null)
       alert('ออกจากระบบสำเร็จ')
       router.push('/login')
+      location.reload();
     },
       userSignUp ({commit}, payload) {
         commit('setLoading', true)

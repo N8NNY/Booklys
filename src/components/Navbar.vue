@@ -69,10 +69,10 @@ export default {
                 pauseOnHover: true,
                 preventDuplicates: true,
                 buttons: [
-                   {text: 'Yes', action: (toast) => {store.dispatch('saveDetail',{owner:userid,swapper:requester});}, bold: false},
+                   {text: 'Yes', action: (toast) => {store.dispatch('saveDetail',{owner:userid,swapper:requester}),Vue.$snotify.remove(toast.id);}, bold: true},
                      //{text: 'Yes', action: (toast) => {console.log(userid+" : "+requester)}, bold: false},
                     
-                    {text: 'No', action: (toast) => {console.log('Clicked: No');},bold: false},
+                    {text: 'No', action: (toast) => {console.log('Clicked: No'),Vue.$snotify.remove(toast.id);},bold: true},
                     //{text: 'Later', action: (toast) => {console.log('Clicked: Later'); this.$snotify.remove(toast.id); } },
                     {text: 'Close', action: (toast) => {console.log('Clicked: No'), Vue.$snotify.remove(toast.id);}, bold: true},
                 ]
