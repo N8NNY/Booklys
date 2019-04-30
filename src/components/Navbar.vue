@@ -35,8 +35,15 @@
 <script>
 import firebase from 'firebase'
 import Vue from 'vue'
+import store from '@/store.js'
 export default {
-   
+    props: ['data'],
+   data() {
+        return {
+        owner:'',
+        swapper:''
+      }
+    },
     methods: {
     showNotification() {
     var user = firebase.auth().currentUser
@@ -54,14 +61,15 @@ export default {
           notistatus = dataSnapshot.val().isnoti
           
           if (notistatus == true){
-              Vue.$snotify.confirm('มีคนอยากแลกหนังสือกับคุณ', 'แจ้งเตือน!', {
+              
+             Vue.$snotify.confirm('มีคนอยากแลกหนังสือกับคุณ', 'แจ้งเตือน!', {
                 timeout: 30000,
                 showProgressBar: true,
                 closeOnClick: false,
                 pauseOnHover: true,
                 preventDuplicates: true,
                 buttons: [
-                    {text: 'Yes', action: (toast) => {this.$store.dispatch('saveDetail',{owner:userid,swapper:requester});}, bold: false},
+                   {text: 'Yes', action: (toast) => {store.dispatch('saveDetail',{owner:userid,swapper:requester});}, bold: false},
                      //{text: 'Yes', action: (toast) => {console.log(userid+" : "+requester)}, bold: false},
                     
                     {text: 'No', action: (toast) => {console.log('Clicked: No');},bold: false},
@@ -84,7 +92,19 @@ export default {
       
       
             
-    }
+    },
+    sssaveDetail(payload){
+      /*var date = Date(Date.now())
+      var date_now = date.toString()
+      var date_post = date_now.substring(0,24)
+      var detaillRef = firebase.database().ref("TradeDetail").child(date_post)
+      detaillRef.set({
+        "owner":payload.owner,
+        "swapper":payload.swapper
+      })*/
+      Vue.$snotify.success('คำขอแลกถูกส่งไปแล้ว');
+      }
+      
   }
 }
 </script>

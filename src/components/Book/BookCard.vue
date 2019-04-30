@@ -67,6 +67,7 @@
 
 <script>
 import firebase from 'firebase'
+import Vue from 'vue'
 export default {
     
      props: ['data'],
@@ -75,7 +76,7 @@ export default {
 
             var user = firebase.auth().currentUser
             var userid = user.uid
-            this.$snotify.success('คำขอแลกถูกส่งไปแล้ว');
+            Vue.$snotify.success('คำขอแลกถูกส่งไปแล้ว');
             this.$store.dispatch('setNoti',{owner:this.data.owner,swapper:userid})
             },
             getOwner(){

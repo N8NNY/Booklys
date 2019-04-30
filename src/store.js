@@ -22,6 +22,7 @@ export default new Vuex.Store({
     point: 0,
     favoritepost: null,
     isnoti: false,
+    isSaveDetail: false,
     bookcard:[
       
     ]
@@ -66,6 +67,9 @@ export default new Vuex.Store({
     },
     getNoti(state){
       return state.isnoti
+    },
+    saveDetail(state,payload){
+      state.isSaveDetail = payload
     }
   },
   actions: {
@@ -118,7 +122,8 @@ export default new Vuex.Store({
       });
 
     },*/
-      saveDetail(payload){
+      saveDetail({commit},payload){
+        commit('saveDetail',true)
       var date = Date(Date.now())
       var date_now = date.toString()
       var date_post = date_now.substring(0,24)
