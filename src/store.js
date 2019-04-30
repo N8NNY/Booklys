@@ -122,16 +122,38 @@ export default new Vuex.Store({
       });
 
     },*/
-      saveDetail({commit},payload){
+    saveDetail({commit},payload){
         commit('saveDetail',true)
-      var date = Date(Date.now())
-      var date_now = date.toString()
-      var date_post = date_now.substring(0,24)
-      var detaillRef = firebase.database().ref("TradeDetail").child(date_post)
-      detaillRef.set({
-        "owner":payload.owner,
-        "swapper":payload.swapper
-      })
+        var date = Date(Date.now())
+        var date_now = date.toString()
+        var date_post = date_now.substring(0,24)
+        var detaillRef = firebase.database().ref("TradeDetail").child(date_post)
+        detaillRef.set({
+          "owner":payload.owner,
+          "swapper":payload.swapper
+        })
+        },selectBook(){
+          var user = firebase.auth().currentUser
+          var userid = user.uid
+          //Vue.$snotify.success('คำขอแลกถูกส่งไปแล้ว');
+          var getbook
+          var childData
+          var bookCardRef
+          var bookOwnRef = firebase.database().ref('User').child(userid).child("book")
+          bookOwnRef.on("value",function(Snapshot){
+              Snapshot.forEach(function(childSnapshot){
+                  //var key = childSnapshot.key
+                  childData= childSnapshot.val()
+                  bookCardRef = firebase.database().ref('BookCard').child(childData)
+                  bookCardRef.on('value',function(dataSnapshot){
+                      getbook = dataSnapshot.val().bookname
+                      console.log("picked up book :"+getbook);
+                      
+                  })
+                   
+              })
+          })
+          
       },
    
      loadBook({commit}){

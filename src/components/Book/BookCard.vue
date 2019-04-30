@@ -66,18 +66,15 @@
 </template>
 
 <script>
-import firebase from 'firebase'
+import firebase, { functions } from 'firebase'
 import Vue from 'vue'
+import store from '@/store.js'
 export default {
     
      props: ['data'],
     methods: {
         setNoti () {
-            
-            var user = firebase.auth().currentUser
-            var userid = user.uid
-            Vue.$snotify.success('คำขอแลกถูกส่งไปแล้ว');
-            this.$store.dispatch('setNoti',{owner:this.data.owner,swapper:userid})
+            store.dispatch('selectBook')
             },
             getOwner(){
                 //alert(this.data.owner)
