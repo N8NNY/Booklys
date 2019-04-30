@@ -107,7 +107,7 @@ export default new Vuex.Store({
       });
 
     },displayNotification() {
-      console.log('helloooooooooooooo');
+      // console.log('helloooooooooooooo');
       //vm.$snotify.success('Example body content');
     },
     loadBook({commit}){
@@ -116,8 +116,8 @@ export default new Vuex.Store({
           firebase.database().ref("BookCard").once('value').then((data) => {
           const bookcard =[]
           const obj = data.val()
-          console.log('obj',obj)
-          console.log('key :', obj["BookCard1"].bookname)  
+          // console.log('obj',obj)
+          // console.log('key :', obj["BookCard1"].bookname)  
           for(let key in obj){
             
             bookcard.push({
@@ -132,7 +132,7 @@ export default new Vuex.Store({
           }
           commit('setLoading', false)
           //console.log("After load : "+commit('getLoading'));
-          console.log(bookcard);
+          // console.log(bookcard);
           commit('setLoadedBook',bookcard)
       }).catch(
         (error) => {
@@ -271,20 +271,28 @@ export default new Vuex.Store({
           bookname: payload.bookname,
           desciption: payload.desciption,
           imgulr:"",
-          index: -5,
+          index: -100,
           owner:this.state.dname,
           writter: payload.writter,
         }
         userRef.child(date_post).set(data)
 
-        console.log(image[0]);
-        console.log(image[0].name);
-        firebase.storage(image[0].name).ref().put(image[0]).then(response => {
-          response.ref.getDownloadURL().then((downloadURL) => {
-             firebase.database().ref('BookCard').child(date_post).update({"imgulr":downloadURL})
-        })})                 
-       .catch(err => console.log(err))
-      
+        // console.log(image[0]);
+        // console.log(image[0].name);
+        const storageRef = firebase.storage().ref(image[0].name);
+        const task = storageRef.put(image[0]);
+        task.on('state_changed', snapshot => {
+          commit('setLoading', true)
+          let progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log('Upload is ' + progress + '% done');
+        },error => {
+          console.log(error.message)
+        }, () => {
+          commit('setLoading', false)
+          task.snapshot.ref.getDownloadURL().then((url) => {
+            console.log(url)
+            firebase. database().ref('BookCard').child(date_post).update({"imgulr":url})
+          })})
       },
 
       

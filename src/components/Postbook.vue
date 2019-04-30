@@ -77,6 +77,7 @@ export default {
         onFilePicked (e) {
             const files = e.target.files
             this.file = files
+            // console.log(this.file)
 			if(files[0] !== undefined) {
 				this.imageName = files[0].name
 				if(this.imageName.lastIndexOf('.') <= 0) {
@@ -85,7 +86,6 @@ export default {
 			} else {
 				this.imageName = ''
             }
-            console.log(this.imageName)
             
         },
 

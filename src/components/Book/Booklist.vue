@@ -34,7 +34,7 @@ export default {
   },
     created() {
         function check () {
-      console.log("bokkkk")
+    //   console.log("bokkkk")
       }
     },
   methods: {
