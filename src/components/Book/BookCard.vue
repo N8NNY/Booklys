@@ -4,7 +4,7 @@
                 <v-avatar size="24">
                     <img src='https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortWaved&accessoriesType=Kurt&hairColor=BrownDark&facialHairType=Blank&clotheType=BlazerShirt&eyeType=Default&eyebrowType=Default&mouthType=Default&skinColor=Light' alt="">
                 </v-avatar>
-                <div><strong v-if=data.owner >{{data.owner}}
+                <div><strong v-if=data.owner>{{data.owner}}
   
                 </strong></div>
                 
@@ -73,7 +73,7 @@ export default {
      props: ['data'],
     methods: {
         setNoti () {
-
+            
             var user = firebase.auth().currentUser
             var userid = user.uid
             Vue.$snotify.success('คำขอแลกถูกส่งไปแล้ว');
