@@ -1,10 +1,11 @@
 <template>
-    <v-card class="ma-2" >
+    <v-card class="ma-2" width="356px">
             <v-card-title>
                 <v-avatar size="24">
                     <img src='https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortWaved&accessoriesType=Kurt&hairColor=BrownDark&facialHairType=Blank&clotheType=BlazerShirt&eyeType=Default&eyebrowType=Default&mouthType=Default&skinColor=Light' alt="">
                 </v-avatar>
-                <div><strong v-if=data.owner>{{data.owner}}
+                
+                <div><strong v-if="data.owner" >{{data.owner}}
   
                 </strong></div>
                 
@@ -14,9 +15,9 @@
                 </v-btn>
             </v-card-title>
 
-            <v-card-text>
-                <v-layout row>
-                     <v-flex md4>
+            <v-card-text style="height : 156px;">
+                <v-layout row >
+                     <v-flex md4 >
                         <v-img
                            v-bind:src=data.imgurl
                             v-bind:lazy-src=data.imgurl
@@ -39,17 +40,18 @@
                     <v-flex md8 class="ma-2">
                         <v-layout row wrap>
                             <v-flex md12 class="ma-1">
-                                <div class="title" v-if=data.bookname>{{data.bookname}}</div>
+
+                                <div class="title" v-if="data.bookname">{{data.bookname}}</div>
                             </v-flex>
                             <v-flex md12 class="mx-1 grey--text">
-                                <div class="subheading" v-if=data.writter>{{data.writter}}</div>
+                                <div class="subheading" v-if="data.writter">{{data.writter}}</div>
                             </v-flex>
                             <v-flex md12 class="ma-1">
-                                <div class="caption" v-if=data.description>{{data.description}}</div>
+                                <div class="caption" v-if="data.description" style="word-wrap: break-word;">{{data.description}}</div>
                             </v-flex>
+
                         </v-layout>
                     </v-flex>
-
                 </v-layout>
             </v-card-text>
             
@@ -66,11 +68,10 @@
 </template>
 
 <script>
-import firebase, { functions } from 'firebase'
-import Vue from 'vue'
+// import firebase, { functions } from 'firebase'
+// import Vue from 'vue'
 import store from '@/store.js'
 export default {
-    
      props: ['data'],
     methods: {
        swapOnclick () {
@@ -82,8 +83,13 @@ export default {
                 //alert(this.data.owner)
                 return this.data.owner
             }
+        },
+    computed: {
+        getDescription : function (){
+            return this.data.description
         }
-}
+    }
 
+}
 
 </script>

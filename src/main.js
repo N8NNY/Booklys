@@ -6,7 +6,9 @@ import store from './store'
 import '@mdi/font/css/materialdesignicons.css'
 
 import firebase from 'firebase'
-import {firebaseConfig} from './config'
+// eslint-disable-next-line no-unused-vars
+import {app} from '@/config'
+
 import Snotify from 'vue-snotify'
 
 // Import notify styles
@@ -14,9 +16,8 @@ import 'vue-snotify/styles/material.css'
 
 // Tell Vue about Snotify
 Vue.use(Snotify)
-firebase.initializeApp(firebaseConfig);
-Vue.config.productionTip = false
 
+Vue.config.productionTip = false
 
 /*new Vue({
   router,

@@ -3,8 +3,9 @@
         <v-card >
             <v-container>
                 <v-layout gow wrap>
-                    <v-flex md6> 
-                        <BookCard v-for="n in this.$store.state.bookcard"  :key="n.index" :data="n" ></BookCard>
+
+                    <v-flex d-flex md6 v-for="n in this.$store.state.bookcard"  :key="n.index"> 
+                        <BookCard  :data="n" ></BookCard>
                     </v-flex>
                     
                 </v-layout>
@@ -15,7 +16,10 @@
 </template>
 
 <script>
+/* eslint-disable */
 import BookCard from '@/components/Book/BookCard.vue'
+
+
 export default {
     name: 'bookList',
     like:false,
@@ -30,7 +34,7 @@ export default {
   },
     created() {
         function check () {
-      console.log("bokkkk")
+    //   console.log("bokkkk")
       }
     },
   methods: {
@@ -38,3 +42,4 @@ export default {
   }
 }
 </script>
+
