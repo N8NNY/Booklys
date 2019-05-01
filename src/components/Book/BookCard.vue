@@ -68,16 +68,11 @@
 </template>
 
 <script>
-// import firebase, { functions } from 'firebase'
-// import Vue from 'vue'
-import store from '@/store.js'
 export default {
      props: ['data'],
     methods: {
        swapOnclick () {
-            store.dispatch('selectBook',{owner:this.data.owner})
-            
-            
+            this.$store.dispatch('selectBook',{owner:this.data.owner})
             },
             getOwner(){
                 //alert(this.data.owner)
