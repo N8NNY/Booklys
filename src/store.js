@@ -22,7 +22,6 @@ export default new Vuex.Store({
     loading: false,
     psw: null,
     dname: null,
-    bookLists: [],
     displayname: null,
     point: 0,
     favoritepost: null,
@@ -51,9 +50,6 @@ export default new Vuex.Store({
     },
     setPoint(state,payload){
       state.point = payload
-    },
-    serBooklists(state,payload) {
-      state.bookLists = payload 
     },
     getLoading(state){
       return state.loading
@@ -88,9 +84,34 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    /*getOwner({commit},payload){
+    updateBook({commit}){
+      var bookRef = firebase.database().ref('BookCard')
+      bookRef.on('value', function(snapshot){
+      const bookcard =[]
+      const obj = snapshot.val()
+      let index = 0
+      for(let key in obj){
+        if (obj[key].index < index){
+          index = obj[key].index
+        }
+        console.log('updateOBJ',obj[key])
+        bookcard.push({
+          id: key,
+          bookname: obj[key].bookname,
+          description: obj[key].description,
+          imgurl: obj[key].imgurl,
+          index: obj[key].index,
+          owner: obj[key].owner,
+          writter: obj[key].writter
+        })
+      }
+      commit('setIndex', index)
+      commit('setLoadedBook',bookcard)
+      console.log('updatebook'+bookcard)
+      })
 
-    },*/
+    },
+
     setNoti({commit},payload){
       commit('setNoti',true)
       var date = Date(Date.now())
@@ -237,8 +258,7 @@ export default new Vuex.Store({
             })
           }
           commit('setIndex', index)
-          console.log(index)
-          commit('setLoading', false)
+          commit('setLoading', true)
           commit('setLoadedBook',bookcard)
       }).catch(
         (error) => {
@@ -264,27 +284,16 @@ export default new Vuex.Store({
           var date_lastlogin_substring
           var user_point =0
           var displayName
-         /* var userRef = firebase.database().ref("User")
-         userRef.orderByChild("point").on("child_added",function(data){
-            console.log(data.val().displayname);
-          })*/
+
           var firebaseRef = firebase.database().ref("User").child(user.uid);
           
-            //console.log("User ID is :"+user.uid)
             firebaseRef.on('value' , function(dataSnapshot) {
             date_lastlogin = dataSnapshot.val().lastlogindate
             date_lastlogin_substring = date_lastlogin.substring(0,15)
-            //console.log("last login time : " + date_lastlogin)
             displayName = dataSnapshot.val().displayname
-            //console.log('dname '+displayName);
-            //console.log("last "+date_lastlogin_substring);
             });
-            //console.log(date_lastlogin_substring == date_now_substring)
-           //console.log("last "+date_lastlogin_substring);
-           //console.log("now "+date_now_substring);
            firebaseRef.on('value' , function(dataSnapshot) {
             user_point = dataSnapshot.val().point
-            //console.log(user_point);
             commit('setPoint',user_point)
             commit('setDisplayName',displayName)
             });
@@ -293,7 +302,6 @@ export default new Vuex.Store({
            setTimeout(function(){
             if(date_lastlogin_substring == date_now_substring)
             {
-                //console.log(date_lastlogin_substring == date_now_substring)
                  firebaseRef.update({
                      "lastlogindate":date_now
                     })
@@ -350,7 +358,6 @@ export default new Vuex.Store({
           borrow:'',
           swap:''
         }
-        //commit('userSignUp',data)
         firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password)
           .then(firebaseUser => {
             useruid = firebaseUser.user.uid;

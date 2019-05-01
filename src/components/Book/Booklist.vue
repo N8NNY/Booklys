@@ -27,15 +27,15 @@ export default {
     BookCard
   },
    data(){
-      BookCard: {}
+       return {
+
+       }
   },
   mounted(){
       
   },
     created() {
-        function check () {
-    //   console.log("bokkkk")
-      }
+        this.$store.dispatch('updateBook')
     },
   methods: {
        
