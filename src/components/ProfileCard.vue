@@ -26,7 +26,7 @@
                             </v-flex>
                         </v-layout>
 
-                        <v-layout align-center justify-start md5 class="mt-4 justify-center">
+                        <v-layout align-center justify-start md5 class="mt-4 justify-center text-md-center">
                             <v-flex md3 class="title">
 
                                 

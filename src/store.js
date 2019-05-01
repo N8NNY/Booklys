@@ -23,7 +23,6 @@ export default new Vuex.Store({
     loading: false,
     psw: null,
     dname: null,
-    bookLists: [],
     displayname: null,
     point: 0,
     favoritepost: null,
@@ -65,9 +64,6 @@ export default new Vuex.Store({
     setPoint(state,payload){
       state.point = payload
     },
-    serBooklists(state,payload) {
-      state.bookLists = payload 
-    },
     getLoading(state){
       return state.loading
     },
@@ -103,9 +99,31 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    /*getOwner({commit},payload){
+    updateBook({commit}){
+      var bookRef = firebase.database().ref('BookCard')
+      bookRef.on('value', function(snapshot){
+      const bookcard =[]
+      const obj = snapshot.val()
+      let index = 0
+      for(let key in obj){
+        if (obj[key].index < index){
+          index = obj[key].index
+        }
+        bookcard.push({
+          id: key,
+          bookname: obj[key].bookname,
+          description: obj[key].description,
+          imgurl: obj[key].imgurl,
+          index: obj[key].index,
+          owner: obj[key].owner,
+          writter: obj[key].writter
+        })
+      }
+      commit('setIndex', index)
+      commit('setLoadedBook',bookcard)
+      })
 
-    },*/
+    },
     setBorrow({commit},payload){
       commit('setBorrow',true)
       var date = Date(Date.now())
@@ -142,36 +160,7 @@ export default new Vuex.Store({
       })
      
       
-    },/*checkNoti(){
-      //Vue.$snotify.success('Example body content');
-      var notistatus
-      var user = firebase.auth().currentUser
-      var userRef = firebase.database().ref("User").child(user.uid)
-      userRef.on('value' , function(dataSnapshot) {
-        notistatus = dataSnapshot.val().isnoti
-  
-        if (notistatus == true){
-          Vue.$snotify.confirm('Example body content', 'Example title', {
-            timeout: 30000,
-            showProgressBar: true,
-            closeOnClick: false,
-            pauseOnHover: true,
-            preventDuplicates: true,
-            buttons: [
-                {text: 'Yes', action: (toast) => {console.log('Clicked: Yes'), Vue.$snotify.remove(toast.id);}, bold: false},
-                {text: 'No', action: (toast) => {console.log('Clicked: No'), Vue.$snotify.remove(toast.id);},bold: false},
-                //{text: 'Later', action: (toast) => {console.log('Clicked: Later'); this.$snotify.remove(toast.id); } },
-                {text: 'Close', action: (toast) => {console.log('Clicked: No'), Vue.$snotify.remove(toast.id);}, bold: true},
-            ]
-            });
-        }
-        else{
-          console.log('fuckyou');
-          
-        }
-      });
-
-    },*/
+    },
     saveDetail({commit},payload){
         commit('saveDetail',true)
         var date = Date(Date.now())
@@ -285,7 +274,6 @@ export default new Vuex.Store({
           })
           
       },
-   
      loadBook({commit}){
       commit('setLoading', true)
           firebase.database().ref("BookCard").once('value').then((data) => {
@@ -307,8 +295,7 @@ export default new Vuex.Store({
             })
           }
           commit('setIndex', index)
-          console.log(index)
-          commit('setLoading', false)
+          commit('setLoading', true)
           commit('setLoadedBook',bookcard)
       }).catch(
         (error) => {
@@ -334,27 +321,16 @@ export default new Vuex.Store({
           var date_lastlogin_substring
           var user_point =0
           var displayName
-         /* var userRef = firebase.database().ref("User")
-         userRef.orderByChild("point").on("child_added",function(data){
-            console.log(data.val().displayname);
-          })*/
+
           var firebaseRef = firebase.database().ref("User").child(user.uid);
           
-            //console.log("User ID is :"+user.uid)
             firebaseRef.on('value' , function(dataSnapshot) {
             date_lastlogin = dataSnapshot.val().lastlogindate
             date_lastlogin_substring = date_lastlogin.substring(0,15)
-            //console.log("last login time : " + date_lastlogin)
             displayName = dataSnapshot.val().displayname
-            //console.log('dname '+displayName);
-            //console.log("last "+date_lastlogin_substring);
             });
-            //console.log(date_lastlogin_substring == date_now_substring)
-           //console.log("last "+date_lastlogin_substring);
-           //console.log("now "+date_now_substring);
            firebaseRef.on('value' , function(dataSnapshot) {
             user_point = dataSnapshot.val().point
-            //console.log(user_point);
             commit('setPoint',user_point)
             commit('setDisplayName',displayName)
             });
@@ -363,7 +339,6 @@ export default new Vuex.Store({
            setTimeout(function(){
             if(date_lastlogin_substring == date_now_substring)
             {
-                //console.log(date_lastlogin_substring == date_now_substring)
                  firebaseRef.update({
                      "lastlogindate":date_now
                     })
@@ -421,7 +396,6 @@ export default new Vuex.Store({
           isnoti:false,
           borrownoti:false
         }
-        //commit('userSignUp',data)
         firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password)
           .then(firebaseUser => {
             useruid = firebaseUser.user.uid;
@@ -448,7 +422,6 @@ export default new Vuex.Store({
         var date_now = date.toString()
         var date_post = date_now.substring(0,24)
         var image = payload.imagefile
-
         
         commit('setError', null)
         let minusIndex = this.state.index - 1;
@@ -481,13 +454,7 @@ export default new Vuex.Store({
             commit('setLoading', false)
           })})
       },
-
-      
-  },
-
-  getters:{
-
-
+     
   }
 })
 

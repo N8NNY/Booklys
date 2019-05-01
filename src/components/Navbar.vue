@@ -2,7 +2,7 @@
     <div class='navbar' >
         <v-container >
             <v-toolbar app flat  fixed color="orange lighten-2"  class='mb-2'>
-            <v-btn flat class="body-2" color="red accent-4">
+            <v-btn flat class="body-2" color="red accent-4" @click="scrollToTop">
                 <v-icon left class='ma-1'>home</v-icon> Home
             </v-btn>
             <v-btn @click="showNotification" flat class="body-2" color="#f2f4f7">
@@ -19,13 +19,6 @@
                 solo-inverted
                 style="max-width: 300px;"
             />
-            <v-btn 
-            round depressed 
-            color="red accent-3" 
-            class="title white--text"
-            >
-            Share
-            </v-btn>
             </v-toolbar>
         </v-container>
         
@@ -45,6 +38,9 @@ export default {
       }
     },
     methods: {
+        scrollToTop() {
+            window.scrollTo(0,0);
+        },
     showNotification() {
     var user = firebase.auth().currentUser
     var userid = user.uid
