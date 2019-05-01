@@ -1,9 +1,12 @@
 <template>
-  <v-layout column>
-    <v-flex xs12 class="text-xs-center" mt-5>
-      <h3>Sign Up</h3>
+  <v-layout column align-center>
+        <v-flex mt-5>
+      <div class="display-3 font-weight-bold orange--text text--darken-1">BOOKLYs</div>
     </v-flex>
-    <v-flex xs12 sm6 offset-sm3 mt-3>
+    <v-flex class="text-md-center" mt-5>
+      <h3 class="amber--text text--darken-4">SIGN IN</h3>
+    </v-flex>
+    <v-flex mt-3 md6>
       <form @submit.prevent="userSignUp">
         <v-layout column>
           <v-flex>
@@ -49,8 +52,8 @@
               :rules="[comparePasswords]"
             ></v-text-field>
           </v-flex>
-          <v-flex class="text-xs-center" mt-5>
-            <v-btn primary type="submit" :disabled="loading">Sign Up</v-btn>
+          <v-flex class="text-md-center" mt-5>
+            <v-btn primary type="submit" :disabled="loading" color="yellow darken-4" class="white--text">Sign Up</v-btn>
           </v-flex>
         </v-layout>
       </form>
