@@ -130,7 +130,8 @@ export default new Vuex.Store({
       })
      
       
-    },/*checkNoti(){
+    },
+    /*checkNoti(){
       //Vue.$snotify.success('Example body content');
       var notistatus
       var user = firebase.auth().currentUser
@@ -236,7 +237,6 @@ export default new Vuex.Store({
           })
           
       },
-   
      loadBook({commit}){
       commit('setLoading', true)
           firebase.database().ref("BookCard").once('value').then((data) => {
@@ -337,7 +337,7 @@ export default new Vuex.Store({
       firebase.auth().signOut()
       commit('setUser', null)
       alert('ออกจากระบบสำเร็จ')
-      router.push('/login')
+      router.push('/')
       location.reload();
     },
       userSignUp ({commit}, payload) {
@@ -378,12 +378,10 @@ export default new Vuex.Store({
 
         var database = firebase.database()
         var userRef = database.ref('BookCard')
-
         var date = Date(Date.now())
         var date_now = date.toString()
         var date_post = date_now.substring(0,24)
         var image = payload.imagefile
-
         
         commit('setError', null)
         let minusIndex = this.state.index - 1;
@@ -412,13 +410,7 @@ export default new Vuex.Store({
             commit('setLoading', false)
           })})
       },
-
-      
-  },
-
-  getters:{
-
-
+     
   }
 })
 
