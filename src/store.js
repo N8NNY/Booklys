@@ -47,9 +47,6 @@ export default new Vuex.Store({
     setPoint(state,payload){
       state.point = payload
     },
-    serBooklists(state,payload) {
-      state.bookLists = payload 
-    },
     getLoading(state){
       return state.loading
     },
@@ -76,6 +73,34 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    updateBook({commit}){
+      var bookRef = firebase.database().ref('BookCard')
+      bookRef.on('value', function(snapshot){
+      const bookcard =[]
+      const obj = snapshot.val()
+      let index = 0
+      for(let key in obj){
+        if (obj[key].index < index){
+          index = obj[key].index
+        }
+        console.log('updateOBJ',obj[key])
+        bookcard.push({
+          id: key,
+          bookname: obj[key].bookname,
+          description: obj[key].description,
+          imgurl: obj[key].imgurl,
+          index: obj[key].index,
+          owner: obj[key].owner,
+          writter: obj[key].writter
+        })
+      }
+      commit('setIndex', index)
+      commit('setLoadedBook',bookcard)
+      console.log('updatebook'+bookcard)
+      })
+
+    },
+
     setNoti({commit}){
       commit('setNoti',true)
       //alert(commit('getNoti'))
@@ -114,7 +139,7 @@ export default new Vuex.Store({
       //vm.$snotify.success('Example body content');
     },
     loadBook({commit}){
-      commit('setLoading', true)
+      commit('setLoading', false)
           firebase.database().ref("BookCard").once('value').then((data) => {
           const bookcard =[]
           const obj = data.val()
@@ -134,8 +159,7 @@ export default new Vuex.Store({
             })
           }
           commit('setIndex', index)
-          console.log(index)
-          commit('setLoading', false)
+          commit('setLoading', true)
           commit('setLoadedBook',bookcard)
       }).catch(
         (error) => {
