@@ -93,7 +93,8 @@ export default new Vuex.Store({
       var requesterRef = firebase.database().ref("Requester").child(payload.owner)
       requesterRef.set({
         "requester":payload.swapper,
-        "requesto":payload.owner
+        "requesto":payload.owner,
+        "bookfortrade":payload.bookname
       })
      
       
@@ -135,9 +136,16 @@ export default new Vuex.Store({
         var detaillRef = firebase.database().ref("TradeDetail").child(date_post)
         detaillRef.set({
           "owner":payload.owner,
-          "swapper":payload.swapper
+          "swapper":payload.swapper,
         })
-        },
+        Swal.fire({
+          position: 'center',
+          type: 'success',
+          title: 'การแลกสำเร็จ',
+          showConfirmButton: false,
+          timer: 2000
+        })
+    },
         selectBook({commit},payload){
           var user = firebase.auth().currentUser
           var userid = user.uid
@@ -174,19 +182,19 @@ export default new Vuex.Store({
                               setTimeout(() => {
                               resolve()
                               console.log("owner is "+bookOwner);
-                              
+                      
                               Vue.$snotify.success('คำขอแลกถูกส่งไปแล้ว');
                               // this.$store.dispatch('setNoti',{swapper:userid,owner:bookOwner})
                               // this.Store.setNoti({swapper:userid,owner:bookOwner})
                               // store.setNoti({swapper:userid,owner:bookOwner})
-                              store.dispatch('setNoti',{swapper:userid,owner:bookOwner})
+                              store.dispatch('setNoti',{swapper:userid,owner:bookOwner,bookname:getbook})
                               
                             }, 1500)
                             }
                           })
                         }
                       })
-                     //console.log("booksi"+book);
+                    
                     
                   })
                    
