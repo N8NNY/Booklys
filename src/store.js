@@ -7,6 +7,7 @@ import router from '@/router'
 import Snotify from 'vue-snotify';
 // You also need to import the styles. If you're using webpack's css-loader, you can do so here:
 import 'vue-snotify/styles/material.css';
+import Swal from 'sweetalert2'
 
 
 
@@ -23,6 +24,7 @@ export default new Vuex.Store({
     favoritepost: null,
     isnoti: false,
     isSaveDetail: false,
+    owner: null,
     bookcard:[
       
     ]
@@ -70,7 +72,10 @@ export default new Vuex.Store({
     },
     saveDetail(state,payload){
       state.isSaveDetail = payload
-    }
+    },
+    setOwner(state,payload){
+      state.owner = payload
+    },
   },
   actions: {
     /*getOwner({commit},payload){
@@ -132,10 +137,13 @@ export default new Vuex.Store({
           "owner":payload.owner,
           "swapper":payload.swapper
         })
-        },selectBook(){
+        },
+        selectBook({commit},payload){
           var user = firebase.auth().currentUser
           var userid = user.uid
-          //Vue.$snotify.success('คำขอแลกถูกส่งไปแล้ว');
+          var bookOwner =payload.owner
+          //alert(payload.owner)
+          commit('setOwner',bookOwner)
           var getbook
           var childData
           var bookCardRef
@@ -148,7 +156,34 @@ export default new Vuex.Store({
                   bookCardRef.on('value',function(dataSnapshot){
                       getbook = dataSnapshot.val().bookname
                       console.log("picked up book :"+getbook);
-                      
+                      const {value: book} =  Swal.fire({
+                        title: 'เลือกหนังสือของคุณ',
+                        input: 'select',
+                        inputOptions: {
+                          'book1': getbook,
+                        },
+                        inputPlaceholder: 'อยากแลกด้วยเล่มไหนล่ะ',
+                        showCancelButton: true,
+                        inputValidator: (value) => {
+                          return new Promise((resolve) => {
+                            if (value === '') {
+                              resolve('กรุณาเลือกหนังสือ :)')
+                            } else {
+                             
+                              Swal.fire('คุณเลือก: ' + getbook)
+                              setTimeout(() => {
+                              resolve()
+                              console.log("owner is "+bookOwner);
+                              
+                              Vue.$snotify.success('คำขอแลกถูกส่งไปแล้ว');
+                              this.$store.dispatch('setNoti',{swapper:userid,owner:bookOwner})
+                            }, 1500)
+                            }
+                          })
+                        }
+                      })
+                     //console.log("booksi"+book);
+                    
                   })
                    
               })

@@ -54,7 +54,7 @@
             </v-card-text>
             
             <v-card-actions class="justify-space-around">
-                <v-btn @click="setNoti" flat class="amber accent-3 white--text" v>
+                <v-btn @click="swapOnclick" flat class="amber accent-3 white--text" v>
                  Swap
                 </v-btn>
                 <v-btn flat class="amber accent-3 white--text">
@@ -73,8 +73,10 @@ export default {
     
      props: ['data'],
     methods: {
-        setNoti () {
-            store.dispatch('selectBook')
+       swapOnclick () {
+            store.dispatch('selectBook',{owner:this.data.owner})
+            
+            
             },
             getOwner(){
                 //alert(this.data.owner)
