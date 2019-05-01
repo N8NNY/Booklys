@@ -8,7 +8,7 @@ import Snotify from 'vue-snotify';
 // You also need to import the styles. If you're using webpack's css-loader, you can do so here:
 import 'vue-snotify/styles/material.css';
 import Swal from 'sweetalert2'
-
+import store from '@/store.js'
 
 
 Vue.use(Vuex)
@@ -176,7 +176,11 @@ export default new Vuex.Store({
                               console.log("owner is "+bookOwner);
                               
                               Vue.$snotify.success('คำขอแลกถูกส่งไปแล้ว');
-                              this.$store.dispatch('setNoti',{swapper:userid,owner:bookOwner})
+                              // this.$store.dispatch('setNoti',{swapper:userid,owner:bookOwner})
+                              // this.Store.setNoti({swapper:userid,owner:bookOwner})
+                              // store.setNoti({swapper:userid,owner:bookOwner})
+                              store.dispatch('setNoti',{swapper:userid,owner:bookOwner})
+                              
                             }, 1500)
                             }
                           })
