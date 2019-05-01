@@ -120,7 +120,8 @@ export default new Vuex.Store({
       requesterRef.set({
         "requester":payload.swapper,
         "requesto":payload.owner,
-        "bookfortrade":payload.bookname
+        "bookfortrade":payload.bookname,
+        "duration":payload.duration
       })
     },
     setNoti({commit},payload){
@@ -412,12 +413,13 @@ export default new Vuex.Store({
           email: payload.email,
           displayname: payload.displayname,
           lastlogindate:date_now,
-          psw: payload.password,
+          //psw: payload.password,
           //favoritepost: payload.favoritepost,
           point: 100,
           book:'',
           borrow:'',
-          swap:''
+          isnoti:false,
+          borrownoti:false
         }
         //commit('userSignUp',data)
         firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password)
@@ -440,6 +442,7 @@ export default new Vuex.Store({
 
         var database = firebase.database()
         var userRef = database.ref('BookCard')
+        var accountRef = firebase.auth().currentUser.uid
 
         var date = Date(Date.now())
         var date_now = date.toString()
@@ -459,6 +462,10 @@ export default new Vuex.Store({
           writter: payload.writter,
         }
         userRef.child(date_post).set(data)
+        var bookRef = firebase.database().ref('User').child(accountRef).child("book")
+        bookRef.update({
+          "book1":date_post
+        })
 
         const storageRef = firebase.storage().ref(image[0].name);
         const task = storageRef.put(image[0]);

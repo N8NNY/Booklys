@@ -58,6 +58,7 @@ export default {
     requesterRef.on('value',function(dataSnapshot){
             requester = dataSnapshot.val().requester
             bookForTradeRef = dataSnapshot.val().bookfortrade
+            var durationRef = dataSnapshot.val().duration
             nameOfRequesterRef = firebase.database().ref("User").child(requester)
             nameOfRequesterRef.on('value',function(dataSnapshot){
             nameOfRequester = dataSnapshot.val().displayname
@@ -88,7 +89,7 @@ export default {
             
           }
           if(borrownotistatus == true){
-              Vue.$snotify.confirm('ขอยืมหน่อยน้า', "ผู้ใช้ "+nameOfRequester+" อยากยืมหนังสือของคุณ", {
+              Vue.$snotify.confirm('ขอยืม '+durationRef+" นะ", "ผู้ใช้ "+nameOfRequester+" อยากยืมหนังสือของคุณ", {
                 timeout: 30000,
                 showProgressBar: true,
                 closeOnClick: false,

@@ -145,8 +145,41 @@ export default {
             }
             returnStr=returnStr.concat(borrowList[borrowList.length-1])
             userRef.update({"borrow":returnStr})
-            Vue.$snotify.success('คำขอแลกถูกส่งไปแล้ว');
-            store.dispatch('setBorrow',{swapper:uid,owner:this.data.owner,bookname:""})
+            const {value: book} =  Swal.fire({
+                        title: 'เลือกระยะเวลา',
+                        input: 'select',
+                        inputOptions: {
+                          '3วัน': '3วัน',
+                          '7วัน': '7วัน',
+                          '15วัน':'15วัน',
+                          '30วัน':'30วัน'
+                        },
+                        inputPlaceholder: 'ยืมกี่วัน',
+                        showCancelButton: true,
+                        inputValidator: (value) => {
+                          return new Promise((resolve) => {
+                            if (value === '') {
+                              resolve('กรุณาเลือกวัน :)')
+                            } else {
+                             
+                              Swal.fire('คุณเลือก: ' + value)
+                              setTimeout(() => {
+                              resolve()
+                              //console.log("owner is "+bookOwner);
+                      
+                              Vue.$snotify.success('คำขอยืมถูกส่งไปแล้ว');
+                              // this.$store.dispatch('setNoti',{swapper:userid,owner:bookOwner})
+                              // this.Store.setNoti({swapper:userid,owner:bookOwner})
+                              // store.setNoti({swapper:userid,owner:bookOwner})
+                              //store.dispatch('setNoti',{swapper:userid,owner:bookOwner,bookname:getbook})
+                              store.dispatch('setBorrow',{swapper:uid,owner:this.data.owner,bookname:"",duration:value})
+                            }, 1500)
+                            }
+                          })
+                        }
+                      })
+            
+            
         }
         },
     computed: {
