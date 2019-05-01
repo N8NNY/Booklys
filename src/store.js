@@ -25,7 +25,8 @@ export default new Vuex.Store({
     point: 0,
     favoritepost: null,
     isnoti: false,
-    bookcard:[]
+    bookcard:[],
+    index : 0,
   },
  
   mutations: {
@@ -70,6 +71,9 @@ export default new Vuex.Store({
     },
     getNoti(state){
       return state.isnoti
+    },
+    setIndex(state, payload) {
+      state.index = payload
     }
   },
   actions: {
@@ -115,8 +119,11 @@ export default new Vuex.Store({
           firebase.database().ref("BookCard").once('value').then((data) => {
           const bookcard =[]
           const obj = data.val()
+          let index = 0
           for(let key in obj){
-            console.log('Key : ' + key +' bookname : ' + obj[key].bookname +' description : ' + obj[key].description)
+            if (obj[key].index < index){
+              index = obj[key].index
+            }
             bookcard.push({
               id: key,
               bookname: obj[key].bookname,
@@ -127,6 +134,8 @@ export default new Vuex.Store({
               writter: obj[key].writter
             })
           }
+          commit('setIndex', index)
+          console.log(index)
           commit('setLoading', false)
           commit('setLoadedBook',bookcard)
       }).catch(
@@ -261,13 +270,14 @@ export default new Vuex.Store({
         var date_post = date_now.substring(0,24)
         var image = payload.imagefile
 
-
+        
         commit('setError', null)
+        let minusIndex = this.state.index - 1;
         const data = {
           bookname: payload.bookname,
-          desciption: payload.desciption,
+          description : payload.description,
           imgurl:"",
-          index: -101,
+          index: minusIndex,
           owner: payload.owner,
           writter: payload.writter,
         }

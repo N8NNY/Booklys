@@ -28,7 +28,7 @@
                     outline
                     counter
                     maxlength="140"
-                    v-model="desciption"
+                    v-model="description"
                     >
                     </v-text-field>
 
@@ -69,7 +69,7 @@ export default {
         imageName: '',
         bookname: '',
         writter: '',
-        desciption: "",
+        description: "",
         file: null,
       }
     },
@@ -106,14 +106,13 @@ export default {
                 alert("กรุณาใส่รูป")
                 return
             }
-            var des = this.desciption.toString();
             if(this.$store.state.displayname) {
                 var name = this.$store.state.displayname
             }
             this.$store.dispatch('PostBook', { 
             bookname: this.bookname, 
             writter: this.writter , 
-            desciption: des, 
+            description: this.description, 
             imagefile: this.file,
             owner : name
                 }
@@ -123,7 +122,7 @@ export default {
             this.imageName = null
             this.bookname = ""
             this.writter = ""
-            this.desciption = ""
+            this.description = ""
             this.file = null
 
 
