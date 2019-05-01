@@ -9,6 +9,7 @@ import Swal from 'sweetalert2'
 import store from '@/store.js'
 // eslint-disable-next-line no-unused-vars
 import {app} from '@/config'
+import { stat } from 'fs';
 
 
 
@@ -26,7 +27,10 @@ export default new Vuex.Store({
     point: 0,
     favoritepost: null,
     isnoti: false,
+    isborrow:false,
     isSaveDetail: false,
+    userPoint: 0,
+    isAlreadyMinusPoint: false,
     owner: null,
     bookcard:[],
     index : 0,
@@ -35,6 +39,15 @@ export default new Vuex.Store({
   mutations: {
     setUser (state, payload) {
       state.email = payload
+    },
+    setUserPoint(state,payload){
+      state.userPoint = payload
+    },
+    setIsAlreadyMinusPoint(state,payload){
+      state.isAlreadyMinusPoint = payload
+    },
+    getIsAlreadyMinusPoint(state){
+      return state.isAlreadyMinusPoint
     },
     setError (state, payload) {
       state.error = payload
@@ -66,12 +79,14 @@ export default new Vuex.Store({
     setBookName(state,payload){
       state.bookcard.bookname = payload
     },
+    setBorrow(state,payload){
+      state.isborrow = payload
+    },
     setNoti(state,payload){
       state.isnoti = payload
     },
     getNoti(state){
       return state.isnoti
-
     },
     saveDetail(state,payload){
       state.isSaveDetail = payload
@@ -94,7 +109,6 @@ export default new Vuex.Store({
         if (obj[key].index < index){
           index = obj[key].index
         }
-        console.log('updateOBJ',obj[key])
         bookcard.push({
           id: key,
           bookname: obj[key].bookname,
@@ -107,11 +121,27 @@ export default new Vuex.Store({
       }
       commit('setIndex', index)
       commit('setLoadedBook',bookcard)
-      console.log('updatebook'+bookcard)
       })
 
     },
-
+    setBorrow({commit},payload){
+      commit('setBorrow',true)
+      var date = Date(Date.now())
+      var date_now = date.toString()
+      // eslint-disable-next-line no-unused-vars
+      var date_post = date_now.substring(0,24)
+      var userRef = firebase.database().ref("User").child(payload.owner)
+      userRef.update({
+        "borrownoti":true
+      })
+      var requesterRef = firebase.database().ref("Requester").child(payload.owner)
+      requesterRef.set({
+        "requester":payload.swapper,
+        "requesto":payload.owner,
+        "bookfortrade":payload.bookname,
+        "duration":payload.duration
+      })
+    },
     setNoti({commit},payload){
       commit('setNoti',true)
       var date = Date(Date.now())
@@ -131,53 +161,60 @@ export default new Vuex.Store({
      
       
     },
-    /*checkNoti(){
-      //Vue.$snotify.success('Example body content');
-      var notistatus
-      var user = firebase.auth().currentUser
-      var userRef = firebase.database().ref("User").child(user.uid)
-      userRef.on('value' , function(dataSnapshot) {
-        notistatus = dataSnapshot.val().isnoti
-  
-        if (notistatus == true){
-          Vue.$snotify.confirm('Example body content', 'Example title', {
-            timeout: 30000,
-            showProgressBar: true,
-            closeOnClick: false,
-            pauseOnHover: true,
-            preventDuplicates: true,
-            buttons: [
-                {text: 'Yes', action: (toast) => {console.log('Clicked: Yes'), Vue.$snotify.remove(toast.id);}, bold: false},
-                {text: 'No', action: (toast) => {console.log('Clicked: No'), Vue.$snotify.remove(toast.id);},bold: false},
-                //{text: 'Later', action: (toast) => {console.log('Clicked: Later'); this.$snotify.remove(toast.id); } },
-                {text: 'Close', action: (toast) => {console.log('Clicked: No'), Vue.$snotify.remove(toast.id);}, bold: true},
-            ]
-            });
-        }
-        else{
-          console.log('fuckyou');
-          
-        }
-      });
-
-    },*/
     saveDetail({commit},payload){
         commit('saveDetail',true)
         var date = Date(Date.now())
         var date_now = date.toString()
         var date_post = date_now.substring(0,24)
+        //var user = firebase.auth().currentUser
+        //var userid = user.uid
+        var userPoint
+        var userRef
+        var check = commit('getIsAlreadyMinusPoint')
+        var pointRef = firebase.database().ref('User').child(payload.swapper)
+        console.log("swapper : "+payload.swapper);
+        
+        pointRef.on("value",function(Snapshot){
+          userPoint = Snapshot.val().point
+          console.log("before: "+userPoint)
+          console.log("ueqweuwueuque"+check);
+          
+          
+          if (check == false){
+          userPoint -= 100
+          }
+          commit('setIsAlreadyMinusPoint',true)
+          commit('setUserPoint',userPoint)
+          console.log("after: "+userPoint)
+          //userRef = firebase.database().ref('User').child(userid)
+          pointRef.update({
+              "point":userPoint
+          })
+        })
+        
         var detaillRef = firebase.database().ref("TradeDetail").child(date_post)
         detaillRef.set({
           "owner":payload.owner,
           "swapper":payload.swapper,
         })
+        if(payload.type == 'borrow'){
+          Swal.fire({
+            position: 'center',
+            type: 'success',
+            title: 'การยืมสำเร็จ',
+            showConfirmButton: false,
+            timer: 2000
+          })
+        }
+        else{
         Swal.fire({
           position: 'center',
           type: 'success',
-          title: 'การแลกสำเร็จ',
+          title: 'การแลกเปลี่ยนสำเร็จ',
           showConfirmButton: false,
           timer: 2000
         })
+      }
     },
         selectBook({commit},payload){
           var user = firebase.auth().currentUser
@@ -351,12 +388,13 @@ export default new Vuex.Store({
           email: payload.email,
           displayname: payload.displayname,
           lastlogindate:date_now,
-          psw: payload.password,
+          //psw: payload.password,
           //favoritepost: payload.favoritepost,
           point: 100,
           book:'',
           borrow:'',
-          swap:''
+          isnoti:false,
+          borrownoti:false
         }
         firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password)
           .then(firebaseUser => {
@@ -378,6 +416,8 @@ export default new Vuex.Store({
 
         var database = firebase.database()
         var userRef = database.ref('BookCard')
+        var accountRef = firebase.auth().currentUser.uid
+
         var date = Date(Date.now())
         var date_now = date.toString()
         var date_post = date_now.substring(0,24)
@@ -395,6 +435,10 @@ export default new Vuex.Store({
           writter: payload.writter,
         }
         userRef.child(date_post).set(data)
+        var bookRef = firebase.database().ref('User').child(accountRef).child("book")
+        bookRef.update({
+          "book1":date_post
+        })
 
         const storageRef = firebase.storage().ref(image[0].name);
         const task = storageRef.put(image[0]);

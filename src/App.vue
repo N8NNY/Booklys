@@ -16,5 +16,4 @@ export default {
 #app{
 font-family:'Kanit';
 }
-
 </style>
