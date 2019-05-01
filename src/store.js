@@ -71,6 +71,7 @@ export default new Vuex.Store({
     },
     getNoti(state){
       return state.isnoti
+
     },
     setIndex(state, payload) {
       state.index = payload
@@ -241,7 +242,10 @@ export default new Vuex.Store({
           lastlogindate:date_now,
           psw: payload.password,
           //favoritepost: payload.favoritepost,
-          point: 100
+          point: 100,
+          book:'',
+          borrow:'',
+          swap:''
         }
         //commit('userSignUp',data)
         firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password)
@@ -279,6 +283,7 @@ export default new Vuex.Store({
           imgurl:"",
           index: minusIndex,
           owner: payload.owner,
+          uid : firebase.auth().currentUser.uid,
           writter: payload.writter,
         }
         userRef.child(date_post).set(data)
