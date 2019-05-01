@@ -49,6 +49,7 @@ export default {
     var user = firebase.auth().currentUser
     var userid = user.uid
     var notistatus
+    var borrownotistatus
     var requester
     var requesterRef = firebase.database().ref("Requester").child(userid)
     var nameOfRequesterRef
@@ -63,6 +64,7 @@ export default {
             var userRef = firebase.database().ref("User").child(user.uid)
             userRef.on('value' , function(dataSnapshot) {
             notistatus = dataSnapshot.val().isnoti
+            borrownotistatus = dataSnapshot.val().borrownoti
 
           if (notistatus == true){
               
@@ -84,6 +86,25 @@ export default {
                     "isnoti":false
                 })
             
+          }
+          if(borrownotistatus == true){
+              Vue.$snotify.confirm('ขอยืมหน่อยน้า', "ผู้ใช้ "+nameOfRequester+" อยากยืมหนังสือของคุณ", {
+                timeout: 30000,
+                showProgressBar: true,
+                closeOnClick: false,
+                pauseOnHover: true,
+                titleMaxLength:50,
+                oneAtTime:true,
+                preventDuplicates: true,
+                buttons: [
+                    {text: 'Yes', action: (toast) => {store.dispatch('saveDetail',{owner:userid,swapper:requester,type:'borrow'}),Vue.$snotify.remove(toast.id);}, bold: true},
+                    {text: 'No', action: (toast) => {console.log('Clicked: No'),Vue.$snotify.remove(toast.id);},bold: true},
+                    {text: 'Close', action: (toast) => {console.log('Clicked: No'), Vue.$snotify.remove(toast.id);}, bold: true},
+                ]
+                });
+                userRef.update({
+                    "borrownoti":false
+                })
           }
         //     else{
                 

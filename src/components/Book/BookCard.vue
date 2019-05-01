@@ -69,6 +69,10 @@
 
 <script>
 import firebase from 'firebase'
+import 'vue-snotify/styles/material.css';
+import Swal from 'sweetalert2'
+import Vue from 'vue'
+import store from '@/store.js'
 export default {
      props: ['data'],
     methods: {
@@ -81,7 +85,7 @@ export default {
             },
         borrow:function(){
             //gwt current user id
-            var firebaseUser=firebase.auth().currentUser
+                var firebaseUser=firebase.auth().currentUser
             var uid=firebaseUser.uid
             // get user ref
             var userRef=firebase.database().ref("User").child(uid)
@@ -117,11 +121,9 @@ export default {
                 }
                 returnStr=returnStr.concat(borrowList[i])
                 returnStr=returnStr.concat(',')
-
             }
             returnStr=returnStr.concat(borrowList[borrowList.length-1])
             userRef.update({"borrow":returnStr})
-
 
             // add request to requester
             var userRef=firebase.database().ref("User").child(this.data.owner)
@@ -143,8 +145,8 @@ export default {
             }
             returnStr=returnStr.concat(borrowList[borrowList.length-1])
             userRef.update({"borrow":returnStr})
-
-
+            Vue.$snotify.success('คำขอแลกถูกส่งไปแล้ว');
+            store.dispatch('setBorrow',{swapper:uid,owner:this.data.owner,bookname:""})
         }
         },
     computed: {
