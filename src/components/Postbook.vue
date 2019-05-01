@@ -106,7 +106,27 @@ export default {
                 alert("กรุณาใส่รูป")
                 return
             }
-            this.$store.dispatch('PostBook', { bookname: this.bookname, writter: this.writter , desciption: this.desciption, imagefile: this.file})
+            var des = this.desciption.toString();
+            if(this.$store.state.displayname) {
+                var name = this.$store.state.displayname
+            }
+            this.$store.dispatch('PostBook', { 
+            bookname: this.bookname, 
+            writter: this.writter , 
+            desciption: des, 
+            imagefile: this.file,
+            owner : name
+                }
+            )
+
+            this.selectedFile = null
+            this.imageName = null
+            this.bookname = ""
+            this.writter = ""
+            this.desciption = ""
+            this.file = null
+
+
         }
         
     }

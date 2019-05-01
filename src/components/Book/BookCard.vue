@@ -1,5 +1,5 @@
 <template>
-    <v-card class="ma-2" >
+    <v-card class="ma-2" width="356px">
             <v-card-title>
                 <v-avatar size="24">
                     <img src='https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortWaved&accessoriesType=Kurt&hairColor=BrownDark&facialHairType=Blank&clotheType=BlazerShirt&eyeType=Default&eyebrowType=Default&mouthType=Default&skinColor=Light' alt="">
@@ -15,7 +15,7 @@
                 </v-btn>
             </v-card-title>
 
-            <v-card-text >
+            <v-card-text style="height : 156px;">
                 <v-layout row >
                      <v-flex md4 >
                         <v-img
@@ -47,12 +47,11 @@
                                 <div class="subheading" v-if="data.writter">{{data.writter}}</div>
                             </v-flex>
                             <v-flex md12 class="ma-1">
-                                <div class="caption text-truncate" v-if="data.description">{{data.description}}</div>
-
+                                <div class="caption" v-if="data.description" style="word-wrap: break-word;">{{data.description}}</div>
                             </v-flex>
+
                         </v-layout>
                     </v-flex>
-
                 </v-layout>
             </v-card-text>
             
@@ -85,6 +84,5 @@ export default {
     }
 
 }
-
 
 </script>

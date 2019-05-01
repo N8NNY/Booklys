@@ -111,15 +111,12 @@ export default new Vuex.Store({
       //vm.$snotify.success('Example body content');
     },
     loadBook({commit}){
-    commit('setLoading', true)
-    console.log("befor load : "+commit('getLoading'));
+      commit('setLoading', true)
           firebase.database().ref("BookCard").once('value').then((data) => {
           const bookcard =[]
           const obj = data.val()
-          // console.log('obj',obj)
-          // console.log('key :', obj["BookCard1"].bookname)  
           for(let key in obj){
-            
+            console.log('Key : ' + key +' bookname : ' + obj[key].bookname +' description : ' + obj[key].description)
             bookcard.push({
               id: key,
               bookname: obj[key].bookname,
@@ -131,8 +128,6 @@ export default new Vuex.Store({
             })
           }
           commit('setLoading', false)
-          //console.log("After load : "+commit('getLoading'));
-          // console.log(bookcard);
           commit('setLoadedBook',bookcard)
       }).catch(
         (error) => {
@@ -266,19 +261,18 @@ export default new Vuex.Store({
         var date_post = date_now.substring(0,24)
         var image = payload.imagefile
 
+
         commit('setError', null)
         const data = {
           bookname: payload.bookname,
           desciption: payload.desciption,
-          imgulr:"",
-          index: -100,
-          owner:this.state.dname,
+          imgurl:"",
+          index: -101,
+          owner: payload.owner,
           writter: payload.writter,
         }
         userRef.child(date_post).set(data)
 
-        // console.log(image[0]);
-        // console.log(image[0].name);
         const storageRef = firebase.storage().ref(image[0].name);
         const task = storageRef.put(image[0]);
         task.on('state_changed', snapshot => {
@@ -288,10 +282,9 @@ export default new Vuex.Store({
         },error => {
           console.log(error.message)
         }, () => {
-          commit('setLoading', false)
           task.snapshot.ref.getDownloadURL().then((url) => {
-            console.log(url)
-            firebase. database().ref('BookCard').child(date_post).update({"imgulr":url})
+            firebase. database().ref('BookCard').child(date_post).update({"imgurl":url})
+            commit('setLoading', false)
           })})
       },
 
