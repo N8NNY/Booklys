@@ -5,6 +5,8 @@ import firebase from 'firebase'
 import router from '@/router'
 // You also need to import the styles. If you're using webpack's css-loader, you can do so here:
 import 'vue-snotify/styles/material.css';
+import Swal from 'sweetalert2'
+import store from '@/store.js'
 // eslint-disable-next-line no-unused-vars
 import {app} from '@/config'
 
@@ -24,6 +26,8 @@ export default new Vuex.Store({
     point: 0,
     favoritepost: null,
     isnoti: false,
+    isSaveDetail: false,
+    owner: null,
     bookcard:[],
     index : 0,
   },
@@ -67,6 +71,13 @@ export default new Vuex.Store({
     },
     getNoti(state){
       return state.isnoti
+
+    },
+    saveDetail(state,payload){
+      state.isSaveDetail = payload
+    },
+    setOwner(state,payload){
+      state.owner = payload
     },
     setIndex(state, payload) {
       state.index = payload
@@ -101,32 +112,46 @@ export default new Vuex.Store({
 
     },
 
-    setNoti({commit}){
+    setNoti({commit},payload){
       commit('setNoti',true)
-      //alert(commit('getNoti'))
-      //alert(this.state.isnoti)
-      var user = firebase.auth().currentUser
-      var userRef = firebase.database().ref("User").child(user.uid)
+      var date = Date(Date.now())
+      var date_now = date.toString()
+      // eslint-disable-next-line no-unused-vars
+      var date_post = date_now.substring(0,24)
+      var userRef = firebase.database().ref("User").child(payload.owner)
       userRef.update({
         "isnoti":true
       })
+      var requesterRef = firebase.database().ref("Requester").child(payload.owner)
+      requesterRef.set({
+        "requester":payload.swapper,
+        "requesto":payload.owner,
+        "bookfortrade":payload.bookname
+      })
+     
       
-      /*userRef.on('value' , function(dataSnapshot) {
-        notistatus = dataSnapshot.val().isnoti
-        
-        
-      });*/
-    },checkNoti({dispatch}){
+    },/*checkNoti(){
+      //Vue.$snotify.success('Example body content');
       var notistatus
       var user = firebase.auth().currentUser
       var userRef = firebase.database().ref("User").child(user.uid)
       userRef.on('value' , function(dataSnapshot) {
         notistatus = dataSnapshot.val().isnoti
-        
-        
+  
         if (notistatus == true){
-        dispatch('displayNotification')
-          //console.log('notistatus: '+notistatus);
+          Vue.$snotify.confirm('Example body content', 'Example title', {
+            timeout: 30000,
+            showProgressBar: true,
+            closeOnClick: false,
+            pauseOnHover: true,
+            preventDuplicates: true,
+            buttons: [
+                {text: 'Yes', action: (toast) => {console.log('Clicked: Yes'), Vue.$snotify.remove(toast.id);}, bold: false},
+                {text: 'No', action: (toast) => {console.log('Clicked: No'), Vue.$snotify.remove(toast.id);},bold: false},
+                //{text: 'Later', action: (toast) => {console.log('Clicked: Later'); this.$snotify.remove(toast.id); } },
+                {text: 'Close', action: (toast) => {console.log('Clicked: No'), Vue.$snotify.remove(toast.id);}, bold: true},
+            ]
+            });
         }
         else{
           console.log('fuckyou');
@@ -134,12 +159,86 @@ export default new Vuex.Store({
         }
       });
 
-    },displayNotification() {
-      // console.log('helloooooooooooooo');
-      //vm.$snotify.success('Example body content');
+    },*/
+    saveDetail({commit},payload){
+        commit('saveDetail',true)
+        var date = Date(Date.now())
+        var date_now = date.toString()
+        var date_post = date_now.substring(0,24)
+        var detaillRef = firebase.database().ref("TradeDetail").child(date_post)
+        detaillRef.set({
+          "owner":payload.owner,
+          "swapper":payload.swapper,
+        })
+        Swal.fire({
+          position: 'center',
+          type: 'success',
+          title: 'การแลกสำเร็จ',
+          showConfirmButton: false,
+          timer: 2000
+        })
     },
-    loadBook({commit}){
-      commit('setLoading', false)
+        selectBook({commit},payload){
+          var user = firebase.auth().currentUser
+          var userid = user.uid
+          var bookOwner =payload.owner
+          //alert(payload.owner)
+          commit('setOwner',bookOwner)
+          console.log("GOOOO!")
+          var getbook
+          var childData
+          var bookCardRef
+          var bookOwnRef = firebase.database().ref('User').child(userid).child("book")
+          bookOwnRef.on("value",function(Snapshot){
+              Snapshot.forEach(function(childSnapshot){
+                  //var key = childSnapshot.key
+                  childData= childSnapshot.val()
+                  bookCardRef = firebase.database().ref('BookCard').child(childData)
+                  bookCardRef.on('value',function(dataSnapshot){
+                      getbook = dataSnapshot.val().bookname
+                      console.log("picked up book :"+getbook);
+                      // eslint-disable-next-line no-unused-vars
+                      const {value: book} =  Swal.fire({
+                        title: 'เลือกหนังสือของคุณ',
+                        input: 'select',
+                        inputOptions: {
+                          'book1': getbook,
+                        },
+                        inputPlaceholder: 'อยากแลกด้วยเล่มไหนล่ะ',
+                        showCancelButton: true,
+                        inputValidator: (value) => {
+                          return new Promise((resolve) => {
+                            if (value === '') {
+                              resolve('กรุณาเลือกหนังสือ :)')
+                            } else {
+                             
+                              Swal.fire('คุณเลือก: ' + getbook)
+                              setTimeout(() => {
+                              resolve()
+                              console.log("owner is "+bookOwner);
+                      
+                              Vue.$snotify.success('คำขอแลกถูกส่งไปแล้ว');
+                              // this.$store.dispatch('setNoti',{swapper:userid,owner:bookOwner})
+                              // this.Store.setNoti({swapper:userid,owner:bookOwner})
+                              // store.setNoti({swapper:userid,owner:bookOwner})
+                              store.dispatch('setNoti',{swapper:userid,owner:bookOwner,bookname:getbook})
+                              
+                            }, 1500)
+                            }
+                          })
+                        }
+                      })
+                    
+                    
+                  })
+                   
+              })
+          })
+          
+      },
+   
+     loadBook({commit}){
+      commit('setLoading', true)
           firebase.database().ref("BookCard").once('value').then((data) => {
           const bookcard =[]
           const obj = data.val()
@@ -169,6 +268,7 @@ export default new Vuex.Store({
     },
     userSignIn({commit}, payload) {
       commit('setLoading', true)
+      
       firebase.auth().signInWithEmailAndPassword(payload.email, payload.password)
         .then(() => {
           commit('setUser', payload.email)
@@ -238,6 +338,7 @@ export default new Vuex.Store({
       commit('setUser', null)
       alert('ออกจากระบบสำเร็จ')
       router.push('/login')
+      location.reload();
     },
       userSignUp ({commit}, payload) {
         commit('setLoading', true)
@@ -251,7 +352,11 @@ export default new Vuex.Store({
           displayname: payload.displayname,
           lastlogindate:date_now,
           psw: payload.password,
-          point: 100
+          //favoritepost: payload.favoritepost,
+          point: 100,
+          book:'',
+          borrow:'',
+          swap:''
         }
         firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password)
           .then(firebaseUser => {
@@ -288,6 +393,7 @@ export default new Vuex.Store({
           imgurl:"",
           index: minusIndex,
           owner: payload.owner,
+          uid : firebase.auth().currentUser.uid,
           writter: payload.writter,
         }
         userRef.child(date_post).set(data)

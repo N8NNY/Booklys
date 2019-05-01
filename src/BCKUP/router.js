@@ -5,7 +5,6 @@ import Login from './views/Login.vue'
 import SignUp from './views/SignUp.vue'
 import firebase from 'firebase'
 
-/* eslint-disable */
 Vue.use(Router)
 
 /*export default new Router({
@@ -37,6 +36,8 @@ Vue.use(Router)
     }
   })
 
+  
+  
 })*/
 const routerOptions = [
   {
@@ -85,8 +86,7 @@ const router = new Router({
       path: '/signup',
       name: 'signup',
       component: SignUp
-    },
-    
+    }
   ]
 })
 
