@@ -1,3 +1,5 @@
+import firebase from 'firebase'
+
 export const firebaseConfig = {
     apiKey: "AIzaSyC5qzu9jGoaS0lPEsLN57-5jduifASd_Ks",
     authDomain: "softdevdb-d19a4.firebaseapp.com",
@@ -6,3 +8,5 @@ export const firebaseConfig = {
     storageBucket: "softdevdb-d19a4.appspot.com",
     messagingSenderId: "300422296810"
 };
+
+export const app = firebase.initializeApp(firebaseConfig);

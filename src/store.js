@@ -3,10 +3,11 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import firebase from 'firebase'
 import router from '@/router'
-//import { stat } from 'fs';
-import Snotify from 'vue-snotify';
 // You also need to import the styles. If you're using webpack's css-loader, you can do so here:
 import 'vue-snotify/styles/material.css';
+// eslint-disable-next-line no-unused-vars
+import {app} from '@/config'
+
 
 
 
@@ -18,13 +19,13 @@ export default new Vuex.Store({
     error: null,
     loading: false,
     psw: null,
+    dname: null,
+    bookLists: [],
     displayname: null,
     point: 0,
     favoritepost: null,
     isnoti: false,
-    bookcard:[
-      
-    ]
+    bookcard:[]
   },
  
   mutations: {
@@ -45,6 +46,9 @@ export default new Vuex.Store({
     },
     setPoint(state,payload){
       state.point = payload
+    },
+    serBooklists(state,payload) {
+      state.bookLists = payload 
     },
     getLoading(state){
       return state.loading
@@ -103,46 +107,38 @@ export default new Vuex.Store({
       });
 
     },displayNotification() {
-      console.log('helloooooooooooooo');
+      // console.log('helloooooooooooooo');
       //vm.$snotify.success('Example body content');
     },
-      
-    
-     loadBook({commit}){
+    loadBook({commit}){
       commit('setLoading', true)
-      console.log("befor load : "+commit('getLoading'));
-            firebase.database().ref("BookCard").once('value').then((data) => {
-            const bookcard =[]
-            const obj = data.val()
-            for(let key in obj){
-              bookcard.push({
-                id: key,
-                bookname: obj[key].bookname,
-                description: obj[key].description,
-                imgurl: obj[key].imgurl,
-                index: obj[key].index,
-                owner: obj[key].owner,
-                writter: obj[key].writter
-              })
-            }
-            commit('setLoading', false)
-            //console.log("After load : "+commit('getLoading'));
-            console.log(bookcard);
-            commit('setLoadedBook',bookcard)
-        }).catch(
-          (error) => {
-            console.log(error)
+          firebase.database().ref("BookCard").once('value').then((data) => {
+          const bookcard =[]
+          const obj = data.val()
+          for(let key in obj){
+            console.log('Key : ' + key +' bookname : ' + obj[key].bookname +' description : ' + obj[key].description)
+            bookcard.push({
+              id: key,
+              bookname: obj[key].bookname,
+              description: obj[key].description,
+              imgurl: obj[key].imgurl,
+              index: obj[key].index,
+              owner: obj[key].owner,
+              writter: obj[key].writter
+            })
           }
-        )
-        //console.log(this.state.bookcard)
-      },
-     /*  creatBook({commit,getters},payload){
-          const bookcard
-      },*/
+          commit('setLoading', false)
+          commit('setLoadedBook',bookcard)
+      }).catch(
+        (error) => {
+          console.log(error)
+        }
+      )
+    },
     userSignIn({commit}, payload) {
       commit('setLoading', true)
       firebase.auth().signInWithEmailAndPassword(payload.email, payload.password)
-        .then(firebaseUser => {
+        .then(() => {
           commit('setUser', payload.email)
           commit('setLoading', false)
           commit('setError', null)
@@ -255,8 +251,49 @@ export default new Vuex.Store({
             commit('setLoading', false)
           })
       },
+      PostBook ({commit}, payload) {
+
+        var database = firebase.database()
+        var userRef = database.ref('BookCard')
+
+        var date = Date(Date.now())
+        var date_now = date.toString()
+        var date_post = date_now.substring(0,24)
+        var image = payload.imagefile
+
+
+        commit('setError', null)
+        const data = {
+          bookname: payload.bookname,
+          desciption: payload.desciption,
+          imgurl:"",
+          index: -101,
+          owner: payload.owner,
+          writter: payload.writter,
+        }
+        userRef.child(date_post).set(data)
+
+        const storageRef = firebase.storage().ref(image[0].name);
+        const task = storageRef.put(image[0]);
+        task.on('state_changed', snapshot => {
+          commit('setLoading', true)
+          let progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log('Upload is ' + progress + '% done');
+        },error => {
+          console.log(error.message)
+        }, () => {
+          task.snapshot.ref.getDownloadURL().then((url) => {
+            firebase. database().ref('BookCard').child(date_post).update({"imgurl":url})
+            commit('setLoading', false)
+          })})
+      },
+
       
-     
+  },
+
+  getters:{
+
+
   }
 })
 
