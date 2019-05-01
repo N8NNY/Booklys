@@ -6,14 +6,16 @@ import store from './store'
 import '@mdi/font/css/materialdesignicons.css'
 
 import firebase from 'firebase'
+// eslint-disable-next-line no-unused-vars
+import {app} from '@/config'
 
-import Snotify from 'vue-snotify';
-// You also need to import the styles. If you're using webpack's css-loader, you can do so here:
-import 'vue-snotify/styles/material.css'; // or dark.css or simple.css
+import Snotify from 'vue-snotify'
 
-Vue.use(Snotify);
-Vue.config.productionTip = false
+// Import notify styles
+import 'vue-snotify/styles/material.css'
 
+// Tell Vue about Snotify
+Vue.use(Snotify)
 
 Vue.config.productionTip = false
 
@@ -36,10 +38,13 @@ const unsubscribe = firebase.auth().onAuthStateChanged((firebaseUser) => {
     store,
     Snotify,
     render: h => h(App),
+    beforeCreate() {
+      Vue.$snotify = this.$snotify;
+    },
     created () {
       store.dispatch('autoSignIn', firebaseUser)
       this.$store.dispatch('loadBook')
-      this.$store.dispatch('checkNoti')
+      //this.$store.dispatch('checkNoti')
      
     }
   }).$mount('#app')

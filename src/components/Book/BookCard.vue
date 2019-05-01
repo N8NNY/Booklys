@@ -56,7 +56,7 @@
             </v-card-text>
             
             <v-card-actions class="justify-space-around">
-                <v-btn v-on:click="setNoti" flat class="amber accent-3 white--text" v>
+                <v-btn @click="swapOnclick" flat class="amber accent-3 white--text" v>
                  Swap
                 </v-btn>
                 <v-btn v-on:click="borrow" flat class="amber accent-3 white--text">
@@ -70,12 +70,14 @@
 <script>
 import firebase from 'firebase'
 export default {
-
      props: ['data'],
     methods: {
-        setNoti () {
-            this.$store.dispatch('setNoti')
-            //this.$store.dispatch('setNoti', true)
+       swapOnclick () {
+            this.$store.dispatch('selectBook',{owner:this.data.owner})
+            },
+            getOwner(){
+                //alert(this.data.owner)
+                return this.data.owner
             },
         borrow:function(){
             //gwt current user id
