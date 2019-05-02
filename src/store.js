@@ -116,7 +116,8 @@ export default new Vuex.Store({
           imgurl: obj[key].imgurl,
           index: obj[key].index,
           owner: obj[key].owner,
-          writter: obj[key].writter
+          writter: obj[key].writter,
+          uid : obj[key].uid
         })
       }
       commit('setIndex', index)

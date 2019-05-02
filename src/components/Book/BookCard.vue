@@ -77,11 +77,11 @@ export default {
      props: ['data'],
     methods: {
        swapOnclick () {
-            this.$store.dispatch('selectBook',{owner:this.data.owner})
+            this.$store.dispatch('selectBook',{owner:this.data.uid})
             },
             getOwner(){
                 //alert(this.data.owner)
-                return this.data.owner
+                return this.data.uid
             },
         borrow:function(){
             //gwt current user id
@@ -97,7 +97,7 @@ export default {
             var req={
                 book:this.data.id,
                 requester:uid,
-                owner:this.data.owner,
+                owner:this.data.uid,
                 duration:7,
                 date:date_now,
                 status:'pending'
@@ -126,7 +126,7 @@ export default {
             userRef.update({"borrow":returnStr})
 
             // add request to requester
-            var userRef=firebase.database().ref("User").child(this.data.owner)
+            var userRef=firebase.database().ref("User").child(this.data.uid)
             userRef.on('value' , function(dataSnapshot) {
                 userData= dataSnapshot.val()
             })
@@ -172,7 +172,7 @@ export default {
                               // this.Store.setNoti({swapper:userid,owner:bookOwner})
                               // store.setNoti({swapper:userid,owner:bookOwner})
                               //store.dispatch('setNoti',{swapper:userid,owner:bookOwner,bookname:getbook})
-                              store.dispatch('setBorrow',{swapper:uid,owner:this.data.owner,bookname:"",duration:value})
+                              store.dispatch('setBorrow',{swapper:uid,owner:this.data.uid,bookname:"",duration:value})
                             }, 1500)
                             }
                           })
